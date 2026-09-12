@@ -377,13 +377,19 @@ export default function AdminDashboard() {
     <Box sx={{ minHeight: "100vh", bgcolor: tokens.color.canvas }}>
       <Box sx={{ borderBottom: "1px solid rgba(25,25,23,0.12)" }}>
         <Container maxWidth="xxl">
-          <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ py: 3 }}>
+          <Stack
+            direction={{ xs: "column", sm: "row" }}
+            justifyContent="space-between"
+            alignItems={{ xs: "flex-start", sm: "center" }}
+            spacing={{ xs: 1.5, sm: 0 }}
+            sx={{ py: 3 }}
+          >
             <Box sx={{ fontSize: 15, letterSpacing: "2px", color: tokens.color.primary }}>
               {content.brand.name} · ADMIN
             </Box>
-            <Stack direction="row" spacing={3} alignItems="center">
+            <Stack direction="row" spacing={3} alignItems="center" flexWrap="wrap" useFlexGap>
               {userEmail && (
-                <Caption sx={{ display: { xs: "none", sm: "block" } }}>{userEmail}</Caption>
+                <Caption sx={{ display: { xs: "none", md: "block" } }}>{userEmail}</Caption>
               )}
               <TextLink component={RouterLink} to="/">
                 VIEW SITE
@@ -562,8 +568,8 @@ export default function AdminDashboard() {
             {serviceItems.map((it, i) => (
               <ItemCard key={i} onRemove={() => removeServiceItem(i)}>
                 <Stack spacing={2}>
-                  <Stack direction="row" spacing={2}>
-                    <TextField label="No." value={it.n} onChange={(e) => updateServiceItem(i, { ...it, n: e.target.value })} variant="standard" sx={{ width: 80, ...fieldSx }} />
+                  <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
+                    <TextField label="No." value={it.n} onChange={(e) => updateServiceItem(i, { ...it, n: e.target.value })} variant="standard" sx={{ width: { xs: "100%", sm: 80 }, ...fieldSx }} />
                     <TextField label="Title" value={it.title} onChange={(e) => updateServiceItem(i, { ...it, title: e.target.value })} fullWidth variant="standard" sx={fieldSx} />
                   </Stack>
                   <TextField label="Description" value={it.copy} onChange={(e) => updateServiceItem(i, { ...it, copy: e.target.value })} fullWidth variant="standard" sx={fieldSx} />
@@ -584,8 +590,8 @@ export default function AdminDashboard() {
             {processItems.map((it, i) => (
               <ItemCard key={i} onRemove={() => removeProcessItem(i)}>
                 <Stack spacing={2}>
-                  <Stack direction="row" spacing={2}>
-                    <TextField label="No." value={it.n} onChange={(e) => updateProcessItem(i, { ...it, n: e.target.value })} variant="standard" sx={{ width: 80, ...fieldSx }} />
+                  <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
+                    <TextField label="No." value={it.n} onChange={(e) => updateProcessItem(i, { ...it, n: e.target.value })} variant="standard" sx={{ width: { xs: "100%", sm: 80 }, ...fieldSx }} />
                     <TextField label="Title" value={it.title} onChange={(e) => updateProcessItem(i, { ...it, title: e.target.value })} fullWidth variant="standard" sx={fieldSx} />
                   </Stack>
                   <TextField label="Description" value={it.copy} onChange={(e) => updateProcessItem(i, { ...it, copy: e.target.value })} fullWidth multiline minRows={2} variant="standard" sx={fieldSx} />
@@ -621,10 +627,10 @@ export default function AdminDashboard() {
             <Box>
               <Caption sx={{ display: "block", mb: 2 }}>Stats grid</Caption>
               {profileStats.map((s, i) => (
-                <Stack direction="row" spacing={2} alignItems="center" key={i} sx={{ mb: 2 }}>
+                <Stack direction={{ xs: "column", sm: "row" }} spacing={2} alignItems={{ xs: "stretch", sm: "center" }} key={i} sx={{ mb: 2 }}>
                   <TextField label="Label" value={s.label} onChange={(e) => updateStat(i, { ...s, label: e.target.value })} variant="standard" sx={{ flex: 1, ...fieldSx }} />
                   <TextField label="Value" value={s.value} onChange={(e) => updateStat(i, { ...s, value: e.target.value })} variant="standard" sx={{ flex: 1, ...fieldSx }} />
-                  <IconButton size="small" onClick={() => removeStat(i)} aria-label="Remove stat" sx={{ color: tokens.color.muted }}>✕</IconButton>
+                  <IconButton size="small" onClick={() => removeStat(i)} aria-label="Remove stat" sx={{ color: tokens.color.muted, alignSelf: { xs: "flex-end", sm: "center" } }}>✕</IconButton>
                 </Stack>
               ))}
               <TextLink onClick={addStat} sx={{ cursor: "pointer" }}>+ ADD STAT</TextLink>
@@ -644,9 +650,9 @@ export default function AdminDashboard() {
             {experienceItems.map((item, i) => (
               <ItemCard key={i} onRemove={() => removeExperienceItem(i)}>
                 <Stack spacing={2}>
-                  <Stack direction="row" spacing={2}>
+                  <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
                     <TextField label="Role / title" value={item.role} onChange={(e) => updateExperienceItem(i, { ...item, role: e.target.value })} fullWidth variant="standard" sx={fieldSx} />
-                    <TextField label="Period (e.g. 2022 – 2024)" value={item.period} onChange={(e) => updateExperienceItem(i, { ...item, period: e.target.value })} sx={{ width: 200, ...fieldSx }} variant="standard" />
+                    <TextField label="Period (e.g. 2022 – 2024)" value={item.period} onChange={(e) => updateExperienceItem(i, { ...item, period: e.target.value })} sx={{ width: { xs: "100%", sm: 200 }, ...fieldSx }} variant="standard" />
                   </Stack>
                   <TextField label="Company / studio" value={item.company} onChange={(e) => updateExperienceItem(i, { ...item, company: e.target.value })} fullWidth variant="standard" sx={fieldSx} />
                   <TextField label="Description (optional)" value={item.description} onChange={(e) => updateExperienceItem(i, { ...item, description: e.target.value })} fullWidth multiline minRows={2} variant="standard" sx={fieldSx} />
@@ -709,13 +715,13 @@ export default function AdminDashboard() {
             <Box>
               <Caption sx={{ display: "block", mb: 2 }}>Social media accounts</Caption>
               {socialLinks.map((s, i) => (
-                <Stack direction="row" spacing={2} alignItems="center" key={i} sx={{ mb: 2 }}>
+                <Stack direction={{ xs: "column", sm: "row" }} spacing={2} alignItems={{ xs: "stretch", sm: "center" }} key={i} sx={{ mb: 2 }}>
                   <TextField
                     label="Platform"
                     value={s.label}
                     onChange={(e) => updateSocialLink(i, { ...s, label: e.target.value })}
                     variant="standard"
-                    sx={{ width: 160, ...fieldSx }}
+                    sx={{ width: { xs: "100%", sm: 160 }, ...fieldSx }}
                   />
                   <TextField
                     label="Profile URL"
@@ -725,7 +731,7 @@ export default function AdminDashboard() {
                     variant="standard"
                     sx={fieldSx}
                   />
-                  <IconButton size="small" onClick={() => removeSocialLink(i)} aria-label="Remove social link" sx={{ color: tokens.color.muted }}>
+                  <IconButton size="small" onClick={() => removeSocialLink(i)} aria-label="Remove social link" sx={{ color: tokens.color.muted, alignSelf: { xs: "flex-end", sm: "center" } }}>
                     ✕
                   </IconButton>
                 </Stack>

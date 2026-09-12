@@ -119,7 +119,7 @@ export function MediaUploadField({
   return (
     <Box>
       {label && <Caption sx={{ display: "block", mb: 1 }}>{label}</Caption>}
-      <Stack direction="row" spacing={2} alignItems="flex-start">
+      <Stack direction={{ xs: "column", sm: "row" }} spacing={2} alignItems={{ xs: "flex-start", sm: "flex-start" }}>
         <Box
           sx={{
             width: kind === "video" ? 160 : kind === "file" ? 160 : 96,

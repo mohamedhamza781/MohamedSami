@@ -338,6 +338,9 @@ function DashboardForm({ lang, onChangeLang }) {
   const [email, setEmail] = React.useState(content.contact.email);
   const [locationValue, setLocationValue] = React.useState(content.contact.location);
   const [region, setRegion] = React.useState(content.contact.region);
+  const [menuLabel, setMenuLabel] = React.useState(content.contact.menuLabel);
+  const [socialLabel, setSocialLabel] = React.useState(content.contact.socialLabel);
+  const [contactLabel, setContactLabel] = React.useState(content.contact.contactLabel);
   const [socialLinks, setSocialLinks] = React.useState(content.contact.socialLinks ?? []);
   function updateSocialLink(i, next) {
     setSocialLinks((prev) => prev.map((s, idx) => (idx === i ? next : s)));
@@ -351,7 +354,7 @@ function DashboardForm({ lang, onChangeLang }) {
   async function saveContact() {
     await updateContent({
       closing: { tagline: closingTagline, image: closingImage },
-      contact: { email, location: locationValue, region, socialLinks },
+      contact: { email, location: locationValue, region, menuLabel, socialLabel, contactLabel, socialLinks },
     });
     announce("Contact & closing saved");
   }
@@ -782,6 +785,13 @@ function DashboardForm({ lang, onChangeLang }) {
             <TextField label="Email" value={email} onChange={(e) => setEmail(e.target.value)} fullWidth variant="standard" sx={fieldSx} />
             <TextField label="Location" value={locationValue} onChange={(e) => setLocationValue(e.target.value)} fullWidth variant="standard" sx={fieldSx} />
             <TextField label="Region" value={region} onChange={(e) => setRegion(e.target.value)} fullWidth variant="standard" sx={fieldSx} />
+            <Rule sx={{ my: 1 }} />
+            <Caption sx={{ display: "block" }}>Footer column headings</Caption>
+            <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
+              <TextField label="'Menu' heading" value={menuLabel} onChange={(e) => setMenuLabel(e.target.value)} fullWidth variant="standard" sx={fieldSx} />
+              <TextField label="'Social' heading" value={socialLabel} onChange={(e) => setSocialLabel(e.target.value)} fullWidth variant="standard" sx={fieldSx} />
+              <TextField label="'Contact' heading" value={contactLabel} onChange={(e) => setContactLabel(e.target.value)} fullWidth variant="standard" sx={fieldSx} />
+            </Stack>
             <Box>
               <Caption sx={{ display: "block", mb: 2 }}>Social media accounts</Caption>
               {socialLinks.map((s, i) => (

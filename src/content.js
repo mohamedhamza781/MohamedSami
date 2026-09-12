@@ -88,7 +88,15 @@ function blankSection() {
     testimonial: { text: "", name: "", meta: "" },
     filmstrip: { sectionLabel: "", note: "", images: ["", "", "", "", "", "", ""] },
     closing: { tagline: "", image: "" },
-    contact: { email: "", location: "", region: "", socialLinks: [] },
+    contact: {
+      email: "",
+      location: "",
+      region: "",
+      socialLinks: [],
+      menuLabel: "",
+      socialLabel: "",
+      contactLabel: "",
+    },
   };
 }
 
@@ -108,6 +116,9 @@ enDefault.work.sectionLabel = "02 / Selected work";
 enDefault.services.sectionLabel = "03 / Services";
 enDefault.process.sectionLabel = "04 / Process";
 enDefault.filmstrip.sectionLabel = "From the archive";
+enDefault.contact.menuLabel = "Menu";
+enDefault.contact.socialLabel = "Social";
+enDefault.contact.contactLabel = "Contact";
 
 const arDefault = blankSection();
 arDefault.header.navLinks = [
@@ -125,5 +136,8 @@ arDefault.work.sectionLabel = "02 / أعمال مختارة";
 arDefault.services.sectionLabel = "03 / الخدمات";
 arDefault.process.sectionLabel = "04 / آلية العمل";
 arDefault.filmstrip.sectionLabel = "من الأرشيف";
+arDefault.contact.menuLabel = "القائمة";
+arDefault.contact.socialLabel = "تواصل اجتماعي";
+arDefault.contact.contactLabel = "تواصل معي";
 
 export const defaultContent = { en: enDefault, ar: arDefault };

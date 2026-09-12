@@ -156,7 +156,7 @@ export function Footer({
 
   const columns = [
     {
-      title: "MENU",
+      title: contact.menuLabel,
       items: [...header.navLinks, { id: "inquire", label: header.inquireLabel }].map((l) => ({
         label: l.label,
         onClick: (e) => {
@@ -167,13 +167,13 @@ export function Footer({
       })),
     },
     {
-      title: "SOCIAL",
+      title: contact.socialLabel,
       items: (contact.socialLinks ?? [])
         .filter((s) => s.url)
         .map((s) => ({ label: s.label, href: s.url, external: true })),
     },
     {
-      title: "CONTACT",
+      title: contact.contactLabel,
       items: [
         { label: contact.email, href: `mailto:${contact.email}` },
         { label: contact.location },

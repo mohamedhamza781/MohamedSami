@@ -177,14 +177,16 @@ function DashboardForm({ lang, onChangeLang }) {
   }
 
   // ---- Approach ----
+  const [approachSectionLabel, setApproachSectionLabel] = React.useState(content.approach.sectionLabel);
   const [statement, setStatement] = React.useState(content.approach.statement);
   const [description, setDescription] = React.useState(content.approach.description);
   async function saveApproach() {
-    await updateContent({ approach: { statement, description } });
+    await updateContent({ approach: { sectionLabel: approachSectionLabel, statement, description } });
     announce("Approach section saved");
   }
 
   // ---- Work / portfolio ----
+  const [workSectionLabel, setWorkSectionLabel] = React.useState(content.work.sectionLabel);
   const [workTitle, setWorkTitle] = React.useState(content.work.title);
   const [workDescription, setWorkDescription] = React.useState(content.work.description);
   const [workDriveUrl, setWorkDriveUrl] = React.useState(content.work.driveUrl);
@@ -203,6 +205,7 @@ function DashboardForm({ lang, onChangeLang }) {
   async function saveWork() {
     await updateContent({
       work: {
+        sectionLabel: workSectionLabel,
         title: workTitle,
         description: workDescription,
         driveUrl: workDriveUrl,
@@ -224,6 +227,7 @@ function DashboardForm({ lang, onChangeLang }) {
   }
 
   // ---- Services ----
+  const [servicesSectionLabel, setServicesSectionLabel] = React.useState(content.services.sectionLabel);
   const [servicesTitle, setServicesTitle] = React.useState(content.services.title);
   const [serviceItems, setServiceItems] = React.useState(content.services.items);
   function updateServiceItem(i, next) {
@@ -239,11 +243,12 @@ function DashboardForm({ lang, onChangeLang }) {
     ]);
   }
   async function saveServices() {
-    await updateContent({ services: { title: servicesTitle, items: serviceItems } });
+    await updateContent({ services: { sectionLabel: servicesSectionLabel, title: servicesTitle, items: serviceItems } });
     announce("Services saved");
   }
 
   // ---- Process ----
+  const [processSectionLabel, setProcessSectionLabel] = React.useState(content.process.sectionLabel);
   const [processTitle, setProcessTitle] = React.useState(content.process.title);
   const [processItems, setProcessItems] = React.useState(content.process.items);
   function updateProcessItem(i, next) {
@@ -256,7 +261,7 @@ function DashboardForm({ lang, onChangeLang }) {
     setProcessItems((prev) => [...prev, { n: String(prev.length + 1).padStart(2, "0"), title: "New step", copy: "" }]);
   }
   async function saveProcess() {
-    await updateContent({ process: { title: processTitle, items: processItems } });
+    await updateContent({ process: { sectionLabel: processSectionLabel, title: processTitle, items: processItems } });
     announce("Process saved");
   }
 
@@ -310,6 +315,7 @@ function DashboardForm({ lang, onChangeLang }) {
   }
 
   // ---- Filmstrip ----
+  const [filmstripSectionLabel, setFilmstripSectionLabel] = React.useState(content.filmstrip.sectionLabel);
   const [filmstripNote, setFilmstripNote] = React.useState(content.filmstrip.note);
   const [filmstripImages, setFilmstripImages] = React.useState(content.filmstrip.images);
   function updateFilmstripImage(i, next) {
@@ -322,7 +328,7 @@ function DashboardForm({ lang, onChangeLang }) {
     setFilmstripImages((prev) => [...prev, ""]);
   }
   async function saveFilmstrip() {
-    await updateContent({ filmstrip: { note: filmstripNote, images: filmstripImages } });
+    await updateContent({ filmstrip: { sectionLabel: filmstripSectionLabel, note: filmstripNote, images: filmstripImages } });
     announce("Filmstrip saved");
   }
 
@@ -564,6 +570,7 @@ function DashboardForm({ lang, onChangeLang }) {
 
         <DashboardSection title="01 / Approach" subtitle="Statement and supporting paragraph">
           <Stack spacing={3}>
+            <TextField label="Section label (small heading above)" value={approachSectionLabel} onChange={(e) => setApproachSectionLabel(e.target.value)} fullWidth variant="standard" sx={fieldSx} />
             <TextField label="Statement" value={statement} onChange={(e) => setStatement(e.target.value)} fullWidth multiline minRows={2} variant="standard" sx={fieldSx} />
             <TextField label="Description" value={description} onChange={(e) => setDescription(e.target.value)} fullWidth multiline minRows={3} variant="standard" sx={fieldSx} />
             <SaveButton onClick={saveApproach}>Save approach</SaveButton>
@@ -574,6 +581,7 @@ function DashboardForm({ lang, onChangeLang }) {
 
         <DashboardSection title="02 / Work" subtitle="Featured story + supporting grid">
           <Stack spacing={3}>
+            <TextField label="Section label (small heading above)" value={workSectionLabel} onChange={(e) => setWorkSectionLabel(e.target.value)} fullWidth variant="standard" sx={fieldSx} />
             <TextField label="Section title" value={workTitle} onChange={(e) => setWorkTitle(e.target.value)} fullWidth variant="standard" sx={fieldSx} />
             <TextField label="Section description" value={workDescription} onChange={(e) => setWorkDescription(e.target.value)} fullWidth multiline minRows={2} variant="standard" sx={fieldSx} />
             <TextField label="'View full portfolio' button label" value={workDriveLabel} onChange={(e) => setWorkDriveLabel(e.target.value)} fullWidth variant="standard" sx={fieldSx} />
@@ -623,6 +631,7 @@ function DashboardForm({ lang, onChangeLang }) {
 
         <DashboardSection title="03 / Services" subtitle="Numbered service rows">
           <Stack spacing={3}>
+            <TextField label="Section label (small heading above)" value={servicesSectionLabel} onChange={(e) => setServicesSectionLabel(e.target.value)} fullWidth variant="standard" sx={fieldSx} />
             <TextField label="Section title" value={servicesTitle} onChange={(e) => setServicesTitle(e.target.value)} fullWidth multiline minRows={2} variant="standard" sx={fieldSx} />
             {serviceItems.map((it, i) => (
               <ItemCard key={i} onRemove={() => removeServiceItem(i)}>
@@ -645,6 +654,7 @@ function DashboardForm({ lang, onChangeLang }) {
 
         <DashboardSection title="04 / Process" subtitle="Four-step grid">
           <Stack spacing={3}>
+            <TextField label="Section label (small heading above)" value={processSectionLabel} onChange={(e) => setProcessSectionLabel(e.target.value)} fullWidth variant="standard" sx={fieldSx} />
             <TextField label="Section title" value={processTitle} onChange={(e) => setProcessTitle(e.target.value)} fullWidth multiline minRows={2} variant="standard" sx={fieldSx} />
             {processItems.map((it, i) => (
               <ItemCard key={i} onRemove={() => removeProcessItem(i)}>
@@ -741,6 +751,7 @@ function DashboardForm({ lang, onChangeLang }) {
 
         <DashboardSection title="Filmstrip" subtitle="Auto-scrolling archive frames">
           <Stack spacing={3}>
+            <TextField label="Section label (small heading above)" value={filmstripSectionLabel} onChange={(e) => setFilmstripSectionLabel(e.target.value)} fullWidth variant="standard" sx={fieldSx} />
             <TextField label="Note" value={filmstripNote} onChange={(e) => setFilmstripNote(e.target.value)} fullWidth variant="standard" sx={fieldSx} />
             <Stack direction="row" flexWrap="wrap" gap={2}>
               {filmstripImages.map((img, i) => (

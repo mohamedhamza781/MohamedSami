@@ -38,8 +38,9 @@ function blankSection() {
       image: "",
       video: "",
     },
-    approach: { statement: "", description: "" },
+    approach: { sectionLabel: "", statement: "", description: "" },
     work: {
+      sectionLabel: "",
       title: "",
       description: "",
       driveUrl: "",
@@ -54,6 +55,7 @@ function blankSection() {
     },
     pullQuote: { text: "", caption: "", image: "" },
     services: {
+      sectionLabel: "",
       title: "",
       items: [
         { n: "01", title: "", copy: "", image: "" },
@@ -63,6 +65,7 @@ function blankSection() {
       ],
     },
     process: {
+      sectionLabel: "",
       title: "",
       items: [
         { n: "01", title: "", copy: "" },
@@ -83,7 +86,7 @@ function blankSection() {
     },
     experience: { sectionLabel: "", title: "", items: [] },
     testimonial: { text: "", name: "", meta: "" },
-    filmstrip: { note: "", images: ["", "", "", "", "", "", ""] },
+    filmstrip: { sectionLabel: "", note: "", images: ["", "", "", "", "", "", ""] },
     closing: { tagline: "", image: "" },
     contact: { email: "", location: "", region: "", socialLinks: [] },
   };
@@ -100,6 +103,11 @@ enDefault.hero.scrollLabel = "Scroll";
 enDefault.hero.workCtaLabel = "View the work";
 enDefault.hero.cvLabel = "Download CV";
 enDefault.work.driveLabel = "View full portfolio";
+enDefault.approach.sectionLabel = "01 / Approach";
+enDefault.work.sectionLabel = "02 / Selected work";
+enDefault.services.sectionLabel = "03 / Services";
+enDefault.process.sectionLabel = "04 / Process";
+enDefault.filmstrip.sectionLabel = "From the archive";
 
 const arDefault = blankSection();
 arDefault.header.navLinks = [
@@ -112,5 +120,10 @@ arDefault.hero.scrollLabel = "مرر لتحت";
 arDefault.hero.workCtaLabel = "شاهد الأعمال";
 arDefault.hero.cvLabel = "تحميل السيرة الذاتية";
 arDefault.work.driveLabel = "شاهد كل الأعمال";
+arDefault.approach.sectionLabel = "01 / نبذة عني";
+arDefault.work.sectionLabel = "02 / أعمال مختارة";
+arDefault.services.sectionLabel = "03 / الخدمات";
+arDefault.process.sectionLabel = "04 / آلية العمل";
+arDefault.filmstrip.sectionLabel = "من الأرشيف";
 
 export const defaultContent = { en: enDefault, ar: arDefault };

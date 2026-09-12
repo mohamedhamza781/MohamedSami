@@ -51,7 +51,7 @@ export default function Home() {
 
       {/* "01 / Approach" — quiet statement + supporting paragraph + About link */}
       <Intro
-        index="01 / Approach"
+        index={approach.sectionLabel}
         statement={approach.statement}
         description={approach.description}
         linkLabel={content.brand.name ? `About ${content.brand.name}`.toUpperCase() : "ABOUT"}
@@ -60,7 +60,7 @@ export default function Home() {
       {/* "02 / Selected work" — feature story + 2x2 supporting grid */}
       <Box id="work" sx={{ scrollMarginTop: "110px" }}>
         <StoryGrid
-          index="02 / Selected work"
+          index={work.sectionLabel}
           title={work.title}
           description={work.description}
           feature={{ ...work.feature, image: work.feature.image || undefined }}
@@ -99,14 +99,14 @@ export default function Home() {
       {/* "03 / Services" — four numbered rows */}
       <Box id="services" sx={{ scrollMarginTop: "110px" }}>
         <ServiceList
-          index="03 / Services"
+          index={services.sectionLabel}
           title={services.title}
           items={services.items.map((it) => ({ ...it, image: it.image || null }))}
         />
       </Box>
 
       {/* "04 / Process" — four-step grid */}
-      <ProcessSteps index="04 / Process" title={process.title} items={process.items} />
+      <ProcessSteps index={process.sectionLabel} title={process.title} items={process.items} />
 
       {/* Full-bleed dark moment band */}
       <MomentBand caption={momentBand.caption} image={momentBand.image || undefined} />
@@ -134,7 +134,7 @@ export default function Home() {
 
       {/* "06 / Fragments" — auto-scrolling filmstrip */}
       <Filmstrip
-        index="FROM THE ARCHIVE"
+        index={filmstrip.sectionLabel}
         note={filmstrip.note}
         images={filmstrip.images.map((src) => src || null)}
       />

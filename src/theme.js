@@ -74,10 +74,10 @@ export function createAppTheme(direction = "ltr") {
     // Arabic text renders noticeably better in a typeface that actually
     // has Arabic glyphs designed for it — Inter falls back to the
     // browser's generic Arabic font otherwise, which looks inconsistent.
-    // Cairo (loaded in index.html) covers both scripts reasonably, so it's
-    // used for the whole RTL theme rather than trying to mix per-element.
+    // IBM Plex Sans Arabic (loaded in index.html) is used for the whole
+    // RTL theme rather than trying to mix per-element.
     fontFamily: isRtl
-      ? '"Cairo", "Inter Variable", "Inter", sans-serif'
+      ? '"IBM Plex Sans Arabic", "Inter Variable", "Inter", sans-serif'
       : '"Inter Variable", "Inter", sans-serif',
     // Display sizes step 42 -> 68 -> 96 across breakpoints; base values
     // here are the small (mobile) sizes, scaled up via component overrides.

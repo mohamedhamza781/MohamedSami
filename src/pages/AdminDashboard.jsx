@@ -98,6 +98,17 @@ export default function AdminDashboard() {
     announce("Brand & footer saved");
   }
 
+  // ---- Header (navbar) ----
+  const [navLinks, setNavLinks] = React.useState(content.header.navLinks);
+  const [inquireLabel, setInquireLabel] = React.useState(content.header.inquireLabel);
+  function updateNavLinkLabel(i, label) {
+    setNavLinks((prev) => prev.map((l, idx) => (idx === i ? { ...l, label } : l)));
+  }
+  async function saveHeader() {
+    await updateContent({ header: { navLinks, inquireLabel } });
+    announce("Header saved");
+  }
+
   // ---- Hero ----
   const [heroTagline, setHeroTagline] = React.useState(content.hero.tagline);
   const [heroImage, setHeroImage] = React.useState(content.hero.image);
@@ -346,7 +357,35 @@ export default function AdminDashboard() {
 
         <Rule sx={{ my: 5 }} />
 
-        <DashboardSection title="Hero" subtitle="Tagline, background photo or video" defaultExpanded>
+        <DashboardSection title="Header" subtitle="Brand name, nav links, Inquire button" defaultExpanded>
+          <Stack spacing={3}>
+            <TextField label="Brand name (navbar + footer)" value={brandName} onChange={(e) => setBrandName(e.target.value)} fullWidth variant="standard" sx={fieldSx} />
+            {navLinks.map((l, i) => (
+              <TextField
+                key={l.id}
+                label={`Nav link ${i + 1} label (scrolls to "${l.id}")`}
+                value={l.label}
+                onChange={(e) => updateNavLinkLabel(i, e.target.value)}
+                fullWidth
+                variant="standard"
+                sx={fieldSx}
+              />
+            ))}
+            <TextField label="Inquire button label" value={inquireLabel} onChange={(e) => setInquireLabel(e.target.value)} fullWidth variant="standard" sx={fieldSx} />
+            <SaveButton
+              onClick={async () => {
+                await saveBrand();
+                await saveHeader();
+              }}
+            >
+              Save header
+            </SaveButton>
+          </Stack>
+        </DashboardSection>
+
+        <Rule />
+
+        <DashboardSection title="Hero" subtitle="Tagline, background photo or video">
           <Stack spacing={3}>
             <TextField
               label="Tagline"
@@ -532,11 +571,10 @@ export default function AdminDashboard() {
 
         <Rule />
 
-        <DashboardSection title="Closing, footer & contact" subtitle="Brand name, closing photo, email, social links">
+        <DashboardSection title="Closing, footer & contact" subtitle="Footer tagline, closing photo, email, social links">
           <Stack spacing={3}>
-            <TextField label="Brand name (navbar + footer)" value={brandName} onChange={(e) => setBrandName(e.target.value)} fullWidth variant="standard" sx={fieldSx} />
             <TextField label="Footer tagline" value={footerTagline} onChange={(e) => setFooterTagline(e.target.value)} fullWidth variant="standard" sx={fieldSx} />
-            <Box><SaveButton onClick={saveBrand}>Save brand & footer</SaveButton></Box>
+            <Box><SaveButton onClick={saveBrand}>Save footer tagline</SaveButton></Box>
 
             <Rule sx={{ my: 1 }} />
 

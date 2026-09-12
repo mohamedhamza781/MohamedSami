@@ -11,16 +11,6 @@ import { Caption } from "./Typography";
 import { Rule } from "./Layout";
 import { useContent } from "../context/ContentContext";
 
-// Section ids that the header/footer navigation scrolls to. Keeping this in
-// one place means Navbar and Footer always agree on where "Work", "About",
-// "Services" and "Inquire" point.
-const SECTION_IDS = {
-  Work: "work",
-  About: "about",
-  Services: "services",
-  Inquire: "inquire",
-};
-
 function scrollToSection(id) {
   document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
 }
@@ -29,15 +19,17 @@ function scrollToSection(id) {
  * Navbar — fixed to the viewport top so it stays visible while the page
  * scrolls beneath it. A soft dark-to-transparent gradient (no blur, no
  * hard edge) keeps its (always `onDark`/light) text legible without ever
- * reading as a "bar" sitting on the page. Pass `links` to override the
- * defaults.
+ * reading as a "bar" sitting on the page.
+ *
+ * The brand name, the nav link labels, and the Inquire button label all
+ * come from `content.brand` / `content.header` (edited from the Admin
+ * Dashboard's "Header" section) — only the section each link scrolls to
+ * (`id`) is fixed in code, so renaming a label never breaks navigation.
  */
-export function Navbar({
-  links = ["Work", "About", "Services"],
-  onInquire,
-  color = tokens.color.onDark,
-}) {
+export function Navbar({ onInquire, color = tokens.color.onDark }) {
   const { content } = useContent();
+  const { navLinks, inquireLabel } = content.header;
+
   return (
     <Box
       component="header"
@@ -67,17 +59,17 @@ export function Navbar({
             {content.brand.name}
           </Link>
           <Stack direction="row" spacing={4} sx={{ display: { xs: "none", md: "flex" } }}>
-            {links.map((l) => (
+            {navLinks.map((l) => (
               <TextLink
-                key={l}
-                href={`#${SECTION_IDS[l] ?? l.toLowerCase()}`}
+                key={l.id}
+                href={`#${l.id}`}
                 onClick={(e) => {
                   e.preventDefault();
-                  scrollToSection(SECTION_IDS[l] ?? l.toLowerCase());
+                  scrollToSection(l.id);
                 }}
                 sx={{ color }}
               >
-                {l.toUpperCase()}
+                {l.label.toUpperCase()}
               </TextLink>
             ))}
           </Stack>
@@ -85,7 +77,7 @@ export function Navbar({
             onClick={onInquire ?? (() => scrollToSection("inquire"))}
             sx={{ borderColor: color, color, textTransform: "uppercase" }}
           >
-            Inquire ↗
+            {inquireLabel} ↗
           </PillButton>
         </Stack>
       </Container>
@@ -95,28 +87,28 @@ export function Navbar({
 
 /**
  * Footer — sits flush with the page canvas (no inversion): ink-colored
- * headings on the same light background as the rest of the system.
- * `columns` lets you pass your own link groups (MENU / SOCIAL / CONTACT
- * read best); the bottom hairline row carries the copyright + credit,
- * a region label, and a "Top ↑" back-to-top link.
+ * headings on the same light background as the rest of the system. The
+ * MENU column mirrors the header's nav links + Inquire label so the two
+ * never say different things after an edit; the bottom hairline row
+ * carries the copyright + credit, a region label, and a "Top ↑" link.
  */
 export function Footer({
   developer = "Mohamed Faik Alnazly",
   developerUrl = "https://portifolio-ylii.onrender.com/",
 }) {
   const { content } = useContent();
-  const { contact, brand } = content;
+  const { contact, brand, header } = content;
 
   const columns = [
     {
       title: "MENU",
-      items: ["Work", "About", "Services", "Inquire"].map((l) => ({
-        label: l,
+      items: [...header.navLinks, { id: "inquire", label: header.inquireLabel }].map((l) => ({
+        label: l.label,
         onClick: (e) => {
           e.preventDefault();
-          scrollToSection(SECTION_IDS[l]);
+          scrollToSection(l.id);
         },
-        href: `#${SECTION_IDS[l]}`,
+        href: `#${l.id}`,
       })),
     },
     {

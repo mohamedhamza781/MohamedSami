@@ -16,6 +16,14 @@ export const defaultContent = {
     name: "",
     footerTagline: "",
   },
+  header: {
+    navLinks: [
+      { id: "work", label: "Work" },
+      { id: "about", label: "About" },
+      { id: "services", label: "Services" },
+    ],
+    inquireLabel: "Inquire",
+  },
   hero: {
     tagline: "",
     image: "",

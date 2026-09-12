@@ -111,10 +111,22 @@ export default function AdminDashboard() {
 
   // ---- Hero ----
   const [heroTagline, setHeroTagline] = React.useState(content.hero.tagline);
+  const [heroEyebrow, setHeroEyebrow] = React.useState(content.hero.eyebrow);
+  const [heroScrollLabel, setHeroScrollLabel] = React.useState(content.hero.scrollLabel);
+  const [heroWorkCtaLabel, setHeroWorkCtaLabel] = React.useState(content.hero.workCtaLabel);
   const [heroImage, setHeroImage] = React.useState(content.hero.image);
   const [heroVideo, setHeroVideo] = React.useState(content.hero.video);
   async function saveHero() {
-    await updateContent({ hero: { tagline: heroTagline, image: heroImage, video: heroVideo } });
+    await updateContent({
+      hero: {
+        tagline: heroTagline,
+        eyebrow: heroEyebrow,
+        scrollLabel: heroScrollLabel,
+        workCtaLabel: heroWorkCtaLabel,
+        image: heroImage,
+        video: heroVideo,
+      },
+    });
     announce("Hero saved");
   }
 
@@ -385,12 +397,41 @@ export default function AdminDashboard() {
 
         <Rule />
 
-        <DashboardSection title="Hero" subtitle="Tagline, background photo or video">
+        <DashboardSection title="Hero" subtitle="Wordmark, eyebrow, tagline, background photo or video">
           <Stack spacing={3}>
+            <Caption sx={{ display: "block" }}>
+              The big wordmark comes from the Brand name field above, and the "Inquire" link here
+              uses the same label as the Header section. Region ("Europe / Worldwide") comes from
+              the Contact section further down.
+            </Caption>
+            <TextField
+              label="Eyebrow (small text under the wordmark)"
+              value={heroEyebrow}
+              onChange={(e) => setHeroEyebrow(e.target.value)}
+              fullWidth
+              variant="standard"
+              sx={fieldSx}
+            />
             <TextField
               label="Tagline"
               value={heroTagline}
               onChange={(e) => setHeroTagline(e.target.value)}
+              fullWidth
+              variant="standard"
+              sx={fieldSx}
+            />
+            <TextField
+              label="Scroll cue label"
+              value={heroScrollLabel}
+              onChange={(e) => setHeroScrollLabel(e.target.value)}
+              fullWidth
+              variant="standard"
+              sx={fieldSx}
+            />
+            <TextField
+              label="'View the work' button label"
+              value={heroWorkCtaLabel}
+              onChange={(e) => setHeroWorkCtaLabel(e.target.value)}
               fullWidth
               variant="standard"
               sx={fieldSx}

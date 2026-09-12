@@ -14,10 +14,13 @@ import { ImagePlaceholder } from "./ImagePlaceholder";
  * "Scroll") sits roughly two-thirds down, above the closing brand block.
  */
 export function Hero({
-  brand = "Varelle",
-  eyebrow = "Editorial wedding photography",
-  tagline = "For weddings with a point of view.",
-  region = "Europe / Worldwide",
+  brand = "",
+  eyebrow = "",
+  tagline = "",
+  region = "",
+  scrollLabel = "Scroll",
+  workCtaLabel = "View the work",
+  inquireLabel = "Inquire",
   image,
   video,
 }) {
@@ -68,7 +71,7 @@ export function Hero({
               }}
               sx={{ color: tokens.color.onDark, textDecoration: "none", cursor: "pointer" }}
             >
-              Scroll ↓
+              {scrollLabel} ↓
             </Eyebrow>
           </Stack>
         </Container>
@@ -106,10 +109,10 @@ export function Hero({
             <Stack direction="row" spacing={4} alignItems="center">
               <Body sx={{ maxWidth: 220, fontSize: 14, color: tokens.color.onDark }}>{tagline}</Body>
               <TextLink href="#work" sx={{ color: tokens.color.onDark, ...navLinkSx }}>
-                View the work →
+                {workCtaLabel} →
               </TextLink>
               <TextLink href="#inquire" sx={{ color: tokens.color.onDark, ...navLinkSx }}>
-                Inquire
+                {inquireLabel}
               </TextLink>
             </Stack>
           </Stack>

@@ -30,7 +30,17 @@ export default function Home() {
       <Navbar />
 
       {/* Hero band: wordmark, tagline, View the work / Inquire */}
-      <Hero tagline={hero.tagline} image={hero.image || undefined} video={hero.video || undefined} />
+      <Hero
+        brand={content.brand.name}
+        eyebrow={hero.eyebrow}
+        tagline={hero.tagline}
+        region={contact.region}
+        scrollLabel={hero.scrollLabel}
+        workCtaLabel={hero.workCtaLabel}
+        inquireLabel={content.header.inquireLabel}
+        image={hero.image || undefined}
+        video={hero.video || undefined}
+      />
 
       {/* "01 / Approach" — quiet statement + supporting paragraph + About link */}
       <Intro

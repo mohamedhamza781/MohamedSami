@@ -26,6 +26,11 @@ export const defaultContent = {
   },
   hero: {
     tagline: "",
+    eyebrow: "",
+    scrollLabel: "Scroll",
+    workCtaLabel: "View the work",
+    cvUrl: "",
+    cvLabel: "Download CV",
     image: "",
     video: "",
   },
@@ -36,6 +41,8 @@ export const defaultContent = {
   work: {
     title: "",
     description: "",
+    driveUrl: "",
+    driveLabel: "View full portfolio",
     feature: { title: "", meta: "", image: "" },
     items: [
       { title: "", meta: "", image: "" },
@@ -80,6 +87,11 @@ export const defaultContent = {
     stats: [],
     linkLabel: "",
   },
+  experience: {
+    sectionLabel: "",
+    title: "",
+    items: [],
+  },
   testimonial: {
     text: "",
     name: "",
@@ -97,7 +109,6 @@ export const defaultContent = {
     email: "",
     location: "",
     region: "",
-    instagram: "",
-    pinterest: "",
+    socialLinks: [],
   },
 };

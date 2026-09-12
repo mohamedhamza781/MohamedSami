@@ -114,6 +114,8 @@ export default function AdminDashboard() {
   const [heroEyebrow, setHeroEyebrow] = React.useState(content.hero.eyebrow);
   const [heroScrollLabel, setHeroScrollLabel] = React.useState(content.hero.scrollLabel);
   const [heroWorkCtaLabel, setHeroWorkCtaLabel] = React.useState(content.hero.workCtaLabel);
+  const [heroCvUrl, setHeroCvUrl] = React.useState(content.hero.cvUrl);
+  const [heroCvLabel, setHeroCvLabel] = React.useState(content.hero.cvLabel);
   const [heroImage, setHeroImage] = React.useState(content.hero.image);
   const [heroVideo, setHeroVideo] = React.useState(content.hero.video);
   async function saveHero() {
@@ -123,6 +125,8 @@ export default function AdminDashboard() {
         eyebrow: heroEyebrow,
         scrollLabel: heroScrollLabel,
         workCtaLabel: heroWorkCtaLabel,
+        cvUrl: heroCvUrl,
+        cvLabel: heroCvLabel,
         image: heroImage,
         video: heroVideo,
       },
@@ -141,6 +145,8 @@ export default function AdminDashboard() {
   // ---- Work / portfolio ----
   const [workTitle, setWorkTitle] = React.useState(content.work.title);
   const [workDescription, setWorkDescription] = React.useState(content.work.description);
+  const [workDriveUrl, setWorkDriveUrl] = React.useState(content.work.driveUrl);
+  const [workDriveLabel, setWorkDriveLabel] = React.useState(content.work.driveLabel);
   const [feature, setFeature] = React.useState(content.work.feature);
   const [workItems, setWorkItems] = React.useState(content.work.items);
   function updateWorkItem(i, next) {
@@ -153,7 +159,16 @@ export default function AdminDashboard() {
     setWorkItems((prev) => [...prev, { title: "New story", meta: "LOCATION · YEAR · TYPE", image: "" }]);
   }
   async function saveWork() {
-    await updateContent({ work: { title: workTitle, description: workDescription, feature, items: workItems } });
+    await updateContent({
+      work: {
+        title: workTitle,
+        description: workDescription,
+        driveUrl: workDriveUrl,
+        driveLabel: workDriveLabel,
+        feature,
+        items: workItems,
+      },
+    });
     announce("Work / portfolio saved");
   }
 
@@ -275,14 +290,42 @@ export default function AdminDashboard() {
   const [email, setEmail] = React.useState(content.contact.email);
   const [locationValue, setLocationValue] = React.useState(content.contact.location);
   const [region, setRegion] = React.useState(content.contact.region);
-  const [instagram, setInstagram] = React.useState(content.contact.instagram);
-  const [pinterest, setPinterest] = React.useState(content.contact.pinterest);
+  const [socialLinks, setSocialLinks] = React.useState(content.contact.socialLinks ?? []);
+  function updateSocialLink(i, next) {
+    setSocialLinks((prev) => prev.map((s, idx) => (idx === i ? next : s)));
+  }
+  function removeSocialLink(i) {
+    setSocialLinks((prev) => prev.filter((_, idx) => idx !== i));
+  }
+  function addSocialLink() {
+    setSocialLinks((prev) => [...prev, { label: "New account", url: "" }]);
+  }
   async function saveContact() {
     await updateContent({
       closing: { tagline: closingTagline, image: closingImage },
-      contact: { email, location: locationValue, region, instagram, pinterest },
+      contact: { email, location: locationValue, region, socialLinks },
     });
     announce("Contact & closing saved");
+  }
+
+  // ---- Experience ----
+  const [experienceSectionLabel, setExperienceSectionLabel] = React.useState(content.experience.sectionLabel);
+  const [experienceTitle, setExperienceTitle] = React.useState(content.experience.title);
+  const [experienceItems, setExperienceItems] = React.useState(content.experience.items);
+  function updateExperienceItem(i, next) {
+    setExperienceItems((prev) => prev.map((it, idx) => (idx === i ? next : it)));
+  }
+  function removeExperienceItem(i) {
+    setExperienceItems((prev) => prev.filter((_, idx) => idx !== i));
+  }
+  function addExperienceItem() {
+    setExperienceItems((prev) => [...prev, { role: "", company: "", period: "", description: "" }]);
+  }
+  async function saveExperience() {
+    await updateContent({
+      experience: { sectionLabel: experienceSectionLabel, title: experienceTitle, items: experienceItems },
+    });
+    announce("Experience saved");
   }
 
   // ---- Password ----
@@ -438,6 +481,16 @@ export default function AdminDashboard() {
             />
             <MediaUploadField label="Background photo" kind="image" aspect="16 / 9" value={heroImage} onChange={setHeroImage} />
             <MediaUploadField label="Background video (overrides the photo when set)" kind="video" value={heroVideo} onChange={setHeroVideo} maxSizeMB={8} />
+            <Rule sx={{ my: 1 }} />
+            <TextField
+              label="'Download CV' button label"
+              value={heroCvLabel}
+              onChange={(e) => setHeroCvLabel(e.target.value)}
+              fullWidth
+              variant="standard"
+              sx={fieldSx}
+            />
+            <MediaUploadField label="CV file (PDF)" kind="file" value={heroCvUrl} onChange={setHeroCvUrl} maxSizeMB={10} />
             <SaveButton onClick={saveHero}>Save hero</SaveButton>
           </Stack>
         </DashboardSection>
@@ -458,6 +511,8 @@ export default function AdminDashboard() {
           <Stack spacing={3}>
             <TextField label="Section title" value={workTitle} onChange={(e) => setWorkTitle(e.target.value)} fullWidth variant="standard" sx={fieldSx} />
             <TextField label="Section description" value={workDescription} onChange={(e) => setWorkDescription(e.target.value)} fullWidth multiline minRows={2} variant="standard" sx={fieldSx} />
+            <TextField label="'View full portfolio' button label" value={workDriveLabel} onChange={(e) => setWorkDriveLabel(e.target.value)} fullWidth variant="standard" sx={fieldSx} />
+            <TextField label="Google Drive (or any) portfolio link" value={workDriveUrl} onChange={(e) => setWorkDriveUrl(e.target.value)} fullWidth variant="standard" sx={fieldSx} placeholder="https://drive.google.com/..." />
 
             <Box>
               <Caption sx={{ display: "block", mb: 1.5 }}>Featured story</Caption>
@@ -581,6 +636,33 @@ export default function AdminDashboard() {
 
         <Rule />
 
+        <DashboardSection title="Experience" subtitle="Where you've worked before — leave empty to hide this section entirely">
+          <Stack spacing={3}>
+            <TextField label="Section label (small heading above)" value={experienceSectionLabel} onChange={(e) => setExperienceSectionLabel(e.target.value)} fullWidth variant="standard" sx={fieldSx} />
+            <TextField label="Heading" value={experienceTitle} onChange={(e) => setExperienceTitle(e.target.value)} fullWidth variant="standard" sx={fieldSx} />
+
+            {experienceItems.map((item, i) => (
+              <ItemCard key={i} onRemove={() => removeExperienceItem(i)}>
+                <Stack spacing={2}>
+                  <Stack direction="row" spacing={2}>
+                    <TextField label="Role / title" value={item.role} onChange={(e) => updateExperienceItem(i, { ...item, role: e.target.value })} fullWidth variant="standard" sx={fieldSx} />
+                    <TextField label="Period (e.g. 2022 – 2024)" value={item.period} onChange={(e) => updateExperienceItem(i, { ...item, period: e.target.value })} sx={{ width: 200, ...fieldSx }} variant="standard" />
+                  </Stack>
+                  <TextField label="Company / studio" value={item.company} onChange={(e) => updateExperienceItem(i, { ...item, company: e.target.value })} fullWidth variant="standard" sx={fieldSx} />
+                  <TextField label="Description (optional)" value={item.description} onChange={(e) => updateExperienceItem(i, { ...item, description: e.target.value })} fullWidth multiline minRows={2} variant="standard" sx={fieldSx} />
+                </Stack>
+              </ItemCard>
+            ))}
+            <TextLink onClick={addExperienceItem} sx={{ cursor: "pointer" }}>
+              + ADD PAST ROLE
+            </TextLink>
+
+            <SaveButton onClick={saveExperience}>Save experience</SaveButton>
+          </Stack>
+        </DashboardSection>
+
+        <Rule />
+
         <DashboardSection title="Testimonial" subtitle="Centered client quote">
           <Stack spacing={3}>
             <TextField label="Quote" value={testimonialText} onChange={(e) => setTestimonialText(e.target.value)} fullWidth multiline minRows={2} variant="standard" sx={fieldSx} />
@@ -624,8 +706,34 @@ export default function AdminDashboard() {
             <TextField label="Email" value={email} onChange={(e) => setEmail(e.target.value)} fullWidth variant="standard" sx={fieldSx} />
             <TextField label="Location" value={locationValue} onChange={(e) => setLocationValue(e.target.value)} fullWidth variant="standard" sx={fieldSx} />
             <TextField label="Region" value={region} onChange={(e) => setRegion(e.target.value)} fullWidth variant="standard" sx={fieldSx} />
-            <TextField label="Instagram URL" value={instagram} onChange={(e) => setInstagram(e.target.value)} fullWidth variant="standard" sx={fieldSx} />
-            <TextField label="Pinterest URL" value={pinterest} onChange={(e) => setPinterest(e.target.value)} fullWidth variant="standard" sx={fieldSx} />
+            <Box>
+              <Caption sx={{ display: "block", mb: 2 }}>Social media accounts</Caption>
+              {socialLinks.map((s, i) => (
+                <Stack direction="row" spacing={2} alignItems="center" key={i} sx={{ mb: 2 }}>
+                  <TextField
+                    label="Platform"
+                    value={s.label}
+                    onChange={(e) => updateSocialLink(i, { ...s, label: e.target.value })}
+                    variant="standard"
+                    sx={{ width: 160, ...fieldSx }}
+                  />
+                  <TextField
+                    label="Profile URL"
+                    value={s.url}
+                    onChange={(e) => updateSocialLink(i, { ...s, url: e.target.value })}
+                    fullWidth
+                    variant="standard"
+                    sx={fieldSx}
+                  />
+                  <IconButton size="small" onClick={() => removeSocialLink(i)} aria-label="Remove social link" sx={{ color: tokens.color.muted }}>
+                    ✕
+                  </IconButton>
+                </Stack>
+              ))}
+              <TextLink onClick={addSocialLink} sx={{ cursor: "pointer" }}>
+                + ADD SOCIAL ACCOUNT
+              </TextLink>
+            </Box>
             <SaveButton onClick={saveContact}>Save closing & contact</SaveButton>
           </Stack>
         </DashboardSection>

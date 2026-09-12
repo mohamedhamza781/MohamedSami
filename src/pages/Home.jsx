@@ -1,11 +1,13 @@
 import * as React from "react";
 import Box from "@mui/material/Box";
+import Link from "@mui/material/Link";
 import { tokens } from "../theme";
 import { Hero } from "../components/Hero";
 import { Intro, StoryGrid } from "../components/Stories";
 import { PullQuote, Testimonial } from "../components/Quote";
 import { ServiceList, ProcessSteps } from "../components/ServicesProcess";
 import { MomentBand, StudioAbout, Filmstrip, ClosingCTA } from "../components/Closing";
+import { ExperienceList } from "../components/Experience";
 import { Footer, Navbar } from "../components/Chrome";
 import { useContent } from "../context/ContentContext";
 
@@ -22,7 +24,7 @@ import { useContent } from "../context/ContentContext";
 
 export default function Home() {
   const { content } = useContent();
-  const { hero, approach, work, pullQuote, services, process, momentBand, profile, testimonial, filmstrip, closing, contact } = content;
+  const { hero, approach, work, pullQuote, services, process, momentBand, profile, experience, testimonial, filmstrip, closing, contact } = content;
 
   return (
     <Box sx={{ bgcolor: tokens.color.canvas }}>
@@ -38,6 +40,8 @@ export default function Home() {
         scrollLabel={hero.scrollLabel}
         workCtaLabel={hero.workCtaLabel}
         inquireLabel={content.header.inquireLabel}
+        cvUrl={hero.cvUrl || undefined}
+        cvLabel={hero.cvLabel}
         image={hero.image || undefined}
         video={hero.video || undefined}
       />
@@ -47,7 +51,7 @@ export default function Home() {
         index="01 / Approach"
         statement={approach.statement}
         description={approach.description}
-        linkLabel="ABOUT VARELLE"
+        linkLabel={content.brand.name ? `About ${content.brand.name}`.toUpperCase() : "ABOUT"}
       />
 
       {/* "02 / Selected work" — feature story + 2x2 supporting grid */}
@@ -59,6 +63,29 @@ export default function Home() {
           feature={{ ...work.feature, image: work.feature.image || undefined }}
           items={work.items.map((it) => ({ ...it, image: it.image || undefined }))}
         />
+        {work.driveUrl && (
+          <Box sx={{ maxWidth: "xxl", mx: "auto", px: { xs: 3, md: 5 }, mt: -2, mb: 4 }}>
+            <Link
+              href={work.driveUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              underline="none"
+              sx={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "8px",
+                fontSize: 12,
+                letterSpacing: "1.2px",
+                textTransform: "uppercase",
+                color: tokens.color.primary,
+                borderBottom: `1px solid ${tokens.color.primary}`,
+                pb: "4px",
+              }}
+            >
+              {work.driveLabel} →
+            </Link>
+          </Box>
+        )}
       </Box>
 
       {/* Centered pull quote + framed image */}
@@ -93,6 +120,9 @@ export default function Home() {
           linkLabel={profile.linkLabel}
         />
       </Box>
+
+      {/* Work history — only renders if at least one entry is added */}
+      <ExperienceList index={experience.sectionLabel} title={experience.title} items={experience.items} />
 
       {/* Centered testimonial */}
       <Testimonial name={testimonial.name} meta={testimonial.meta}>

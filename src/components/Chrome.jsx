@@ -113,10 +113,9 @@ export function Footer({
     },
     {
       title: "SOCIAL",
-      items: [
-        { label: "Instagram", href: contact.instagram, external: true },
-        { label: "Pinterest", href: contact.pinterest, external: true },
-      ],
+      items: (contact.socialLinks ?? [])
+        .filter((s) => s.url)
+        .map((s) => ({ label: s.label, href: s.url, external: true })),
     },
     {
       title: "CONTACT",
@@ -154,7 +153,9 @@ export function Footer({
               {brand.footerTagline}
             </Box>
           </Grid>
-          {columns.map((col) => (
+          {columns
+            .filter((col) => col.items.length > 0)
+            .map((col) => (
             <Grid item xs={6} md={2} key={col.title}>
               <Caption sx={{ display: "block", mb: 1.5, color: tokens.color.muted }}>
                 {col.title}

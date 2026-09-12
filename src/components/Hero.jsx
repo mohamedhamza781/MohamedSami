@@ -21,6 +21,8 @@ export function Hero({
   scrollLabel = "Scroll",
   workCtaLabel = "View the work",
   inquireLabel = "Inquire",
+  cvUrl = "",
+  cvLabel = "Download CV",
   image,
   video,
 }) {
@@ -114,6 +116,17 @@ export function Hero({
               <TextLink href="#inquire" sx={{ color: tokens.color.onDark, ...navLinkSx }}>
                 {inquireLabel}
               </TextLink>
+              {cvUrl && (
+                <TextLink
+                  href={cvUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  download
+                  sx={{ color: tokens.color.onDark, ...navLinkSx }}
+                >
+                  {cvLabel} ↓
+                </TextLink>
+              )}
             </Stack>
           </Stack>
         </Stack>

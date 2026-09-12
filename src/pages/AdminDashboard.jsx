@@ -78,7 +78,40 @@ function SaveButton({ onClick, children = "Save" }) {
 }
 
 export default function AdminDashboard() {
-  const { content, updateContent, resetContent, storageError, loading } = useContent();
+  const { loading } = useContent();
+
+  // Every field below seeds its state from `content` exactly once, at
+  // mount, via useState(content.xxx) — that's normal for an editable form,
+  // but it means the whole dashboard must not mount until the real content
+  // has actually finished loading from the database. Mounting it early
+  // (while `content` is still the blank placeholder) would seed every
+  // field with blank values, and clicking Save on any section would then
+  // silently overwrite the real, already-saved data with those blanks.
+  if (loading) {
+    return (
+      <Box
+        sx={{
+          minHeight: "100vh",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          bgcolor: tokens.color.canvas,
+          color: tokens.color.muted,
+          fontSize: 13,
+          letterSpacing: "1px",
+          textTransform: "uppercase",
+        }}
+      >
+        Loading current content…
+      </Box>
+    );
+  }
+
+  return <DashboardForm />;
+}
+
+function DashboardForm() {
+  const { content, updateContent, resetContent, storageError } = useContent();
   const { logout, changePassword, changeEmail, userEmail } = useAuth();
   const [toast, setToast] = React.useState("");
 
@@ -412,9 +445,6 @@ export default function AdminDashboard() {
           writes straight to the database, live for every visitor. Photos and the hero video upload
           directly to storage; keep files modest in size for faster page loads.
         </Body>
-        {loading && (
-          <Caption sx={{ display: "block", mt: 1 }}>Loading current content…</Caption>
-        )}
 
         <Rule sx={{ my: 5 }} />
 

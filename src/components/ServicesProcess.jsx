@@ -48,17 +48,20 @@ export function ServiceList({ index = "03 / Services", title, items = [] }) {
               </Body>
               <Body sx={{ fontSize: 15, flexGrow: 1 }}>{s.copy}</Body>
 
-              {/* Thumbnail — collapsed to 0 width, revealed on row hover */}
+              {/* Thumbnail — always visible on mobile (no hover exists on
+                  touch, so hiding it there would mean the photo never
+                  shows at all); on desktop it stays collapsed until the
+                  row is hovered, as before. */}
               <Box
                 className="service-thumb"
                 sx={{
-                  width: 0,
-                  height: 72,
-                  opacity: 0,
+                  width: { xs: "100%", md: 0 },
+                  height: { xs: 160, md: 72 },
+                  opacity: { xs: 1, md: 0 },
+                  mt: { xs: 1, md: 0 },
                   ml: 0,
                   overflow: "hidden",
                   flexShrink: 0,
-                  display: { xs: "none", md: "block" },
                   transition:
                     "width 0.45s cubic-bezier(0.16,1,0.3,1), opacity 0.35s ease, margin-left 0.45s cubic-bezier(0.16,1,0.3,1)",
                 }}
@@ -67,7 +70,7 @@ export function ServiceList({ index = "03 / Services", title, items = [] }) {
                   src={s.image}
                   label={null}
                   aspect="auto"
-                  sx={{ width: 64, height: 72 }}
+                  sx={{ width: "100%", height: { xs: 160, md: 72 } }}
                 />
               </Box>
 

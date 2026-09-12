@@ -10,6 +10,7 @@ import { MomentBand, StudioAbout, Filmstrip, ClosingCTA } from "../components/Cl
 import { ExperienceList } from "../components/Experience";
 import { Footer, Navbar } from "../components/Chrome";
 import { useContent } from "../context/ContentContext";
+import { useLanguage } from "../context/LanguageContext";
 
 // ---------------------------------------------------------------------------
 // This mirrors, section by section, every block in the reference screenshot.
@@ -24,6 +25,8 @@ import { useContent } from "../context/ContentContext";
 
 export default function Home() {
   const { content } = useContent();
+  const { direction } = useLanguage();
+  const arrow = direction === "rtl" ? "←" : "→";
   const { hero, approach, work, pullQuote, services, process, momentBand, profile, experience, testimonial, filmstrip, closing, contact } = content;
 
   return (
@@ -82,7 +85,7 @@ export default function Home() {
                 pb: "4px",
               }}
             >
-              {work.driveLabel} →
+              {work.driveLabel} {arrow}
             </Link>
           </Box>
         )}

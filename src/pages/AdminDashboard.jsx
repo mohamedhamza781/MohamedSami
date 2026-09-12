@@ -78,7 +78,8 @@ function SaveButton({ onClick, children = "Save" }) {
 }
 
 export default function AdminDashboard() {
-  const { loading } = useContent();
+  const [editingLang, setEditingLang] = React.useState("en");
+  const { loading } = useContent(editingLang);
 
   // Every field below seeds its state from `content` exactly once, at
   // mount, via useState(content.xxx) — that's normal for an editable form,
@@ -107,11 +108,19 @@ export default function AdminDashboard() {
     );
   }
 
-  return <DashboardForm />;
+  // `key={editingLang}` forces a full remount of DashboardForm when the
+  // editing language switches — every field's local state is seeded once
+  // from useState(content.xxx), so a clean remount is what makes it
+  // reliably re-seed from the *other* language's saved content instead of
+  // showing stale values left over from whichever language was active
+  // before.
+  return (
+    <DashboardForm key={editingLang} lang={editingLang} onChangeLang={setEditingLang} />
+  );
 }
 
-function DashboardForm() {
-  const { content, updateContent, resetContent, storageError } = useContent();
+function DashboardForm({ lang, onChangeLang }) {
+  const { content, updateContent, resetContent, storageError } = useContent(lang);
   const { logout, changePassword, changeEmail, userEmail } = useAuth();
   const [toast, setToast] = React.useState("");
 
@@ -403,7 +412,7 @@ function DashboardForm() {
 
   async function handleReset() {
     await resetContent();
-    announce("Content reset to defaults — reload to see every field refresh");
+    announce(`${lang === "en" ? "English" : "Arabic"} content reset to defaults — reload to see every field refresh`);
   }
 
   return (
@@ -421,6 +430,22 @@ function DashboardForm() {
               {content.brand.name} · ADMIN
             </Box>
             <Stack direction="row" spacing={3} alignItems="center" flexWrap="wrap" useFlexGap>
+              <Stack direction="row" spacing={0} sx={{ border: "1px solid rgba(25,25,23,0.2)" }}>
+                <PillButton
+                  onClick={() => onChangeLang("en")}
+                  variant={lang === "en" ? "filled" : "outlined"}
+                  sx={{ py: "6px", px: "14px", borderRadius: 0, border: "none" }}
+                >
+                  EN
+                </PillButton>
+                <PillButton
+                  onClick={() => onChangeLang("ar")}
+                  variant={lang === "ar" ? "filled" : "outlined"}
+                  sx={{ py: "6px", px: "14px", borderRadius: 0, border: "none" }}
+                >
+                  AR
+                </PillButton>
+              </Stack>
               {userEmail && (
                 <Caption sx={{ display: { xs: "none", md: "block" } }}>{userEmail}</Caption>
               )}
@@ -444,6 +469,10 @@ function DashboardForm() {
           Every section below — hero, portfolio, services, the studio profile, footer and contact —
           writes straight to the database, live for every visitor. Photos and the hero video upload
           directly to storage; keep files modest in size for faster page loads.
+        </Body>
+        <Body sx={{ mt: 1, fontSize: 13, fontWeight: 600 }}>
+          Editing: {lang === "en" ? "English" : "العربية (Arabic)"} — use the EN/AR switch above to
+          edit the other language. Each language has its own separate text and photos.
         </Body>
 
         <Rule sx={{ my: 5 }} />
@@ -804,7 +833,7 @@ function DashboardForm() {
           underline="none"
           sx={{ fontSize: 12, letterSpacing: "1px", textTransform: "uppercase", color: tokens.color.muted, cursor: "pointer" }}
         >
-          Reset all content to defaults
+          Reset {lang === "en" ? "English" : "Arabic"} content to defaults
         </Link>
       </Container>
 

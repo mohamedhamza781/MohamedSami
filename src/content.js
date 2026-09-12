@@ -1,114 +1,116 @@
 // ---------------------------------------------------------------------------
-// Central content store for the entire site. Every piece of text, every
-// photo and the hero video all live here. `defaultContent` is the blank
-// starting template — it ships with NO placeholder/fake content on
-// purpose, so a fresh deploy starts empty and the real owner fills
-// everything in from the Admin Dashboard. It's also the fallback/reset
-// value: ContentContext persists the live (possibly edited) copy to the
-// database so admin edits survive a reload.
+// Central content store for the entire site, in two languages. Every piece
+// of text, every photo and the hero video live here. `defaultContent` is
+// the blank starting template for BOTH languages — it ships with NO
+// placeholder/fake content on purpose, so a fresh deploy starts empty and
+// the real owner fills everything in from the Admin Dashboard (which has
+// its own EN/AR toggle to edit each language's copy separately). It's
+// also the fallback/reset value: ContentContext persists the live
+// (possibly edited) copy to the database so admin edits survive a reload.
 //
-// Images/video are stored as public Supabase Storage URLs once uploaded
-// from the Admin Dashboard.
+// NOTE ON MEDIA: images/video/files are stored per-language too (each
+// language has its own `image`/`video`/`cvUrl` fields, uploaded
+// separately). That's a deliberate simplification — sharing a single
+// photo across both languages would need a more complex "shared vs.
+// per-language" content shape. The trade-off: if you want the same photo
+// in both languages, upload it once while editing English and again while
+// editing Arabic.
 // ---------------------------------------------------------------------------
 
-export const defaultContent = {
-  brand: {
-    name: "",
-    footerTagline: "",
-  },
-  header: {
-    navLinks: [
-      { id: "work", label: "Work" },
-      { id: "about", label: "About" },
-      { id: "services", label: "Services" },
-    ],
-    inquireLabel: "Inquire",
-  },
-  hero: {
-    tagline: "",
-    eyebrow: "",
-    scrollLabel: "Scroll",
-    workCtaLabel: "View the work",
-    cvUrl: "",
-    cvLabel: "Download CV",
-    image: "",
-    video: "",
-  },
-  approach: {
-    statement: "",
-    description: "",
-  },
-  work: {
-    title: "",
-    description: "",
-    driveUrl: "",
-    driveLabel: "View full portfolio",
-    feature: { title: "", meta: "", image: "" },
-    items: [
-      { title: "", meta: "", image: "" },
-      { title: "", meta: "", image: "" },
-      { title: "", meta: "", image: "" },
-      { title: "", meta: "", image: "" },
-    ],
-  },
-  pullQuote: {
-    text: "",
-    caption: "",
-    image: "",
-  },
-  services: {
-    title: "",
-    items: [
-      { n: "01", title: "", copy: "", image: "" },
-      { n: "02", title: "", copy: "", image: "" },
-      { n: "03", title: "", copy: "", image: "" },
-      { n: "04", title: "", copy: "", image: "" },
-    ],
-  },
-  process: {
-    title: "",
-    items: [
-      { n: "01", title: "", copy: "" },
-      { n: "02", title: "", copy: "" },
-      { n: "03", title: "", copy: "" },
-      { n: "04", title: "", copy: "" },
-    ],
-  },
-  momentBand: {
-    caption: "",
-    image: "",
-  },
-  profile: {
-    sectionLabel: "",
-    title: "",
-    paragraphs: [],
-    image: "",
-    imageCaption: "",
-    stats: [],
-    linkLabel: "",
-  },
-  experience: {
-    sectionLabel: "",
-    title: "",
-    items: [],
-  },
-  testimonial: {
-    text: "",
-    name: "",
-    meta: "",
-  },
-  filmstrip: {
-    note: "",
-    images: ["", "", "", "", "", "", ""],
-  },
-  closing: {
-    tagline: "",
-    image: "",
-  },
-  contact: {
-    email: "",
-    location: "",
-    region: "",
-    socialLinks: [],
-  },
-};
+function blankSection() {
+  return {
+    brand: { name: "", footerTagline: "" },
+    header: {
+      navLinks: [
+        { id: "work", label: "" },
+        { id: "about", label: "" },
+        { id: "services", label: "" },
+      ],
+      inquireLabel: "",
+    },
+    hero: {
+      tagline: "",
+      eyebrow: "",
+      scrollLabel: "",
+      workCtaLabel: "",
+      cvUrl: "",
+      cvLabel: "",
+      image: "",
+      video: "",
+    },
+    approach: { statement: "", description: "" },
+    work: {
+      title: "",
+      description: "",
+      driveUrl: "",
+      driveLabel: "",
+      feature: { title: "", meta: "", image: "" },
+      items: [
+        { title: "", meta: "", image: "" },
+        { title: "", meta: "", image: "" },
+        { title: "", meta: "", image: "" },
+        { title: "", meta: "", image: "" },
+      ],
+    },
+    pullQuote: { text: "", caption: "", image: "" },
+    services: {
+      title: "",
+      items: [
+        { n: "01", title: "", copy: "", image: "" },
+        { n: "02", title: "", copy: "", image: "" },
+        { n: "03", title: "", copy: "", image: "" },
+        { n: "04", title: "", copy: "", image: "" },
+      ],
+    },
+    process: {
+      title: "",
+      items: [
+        { n: "01", title: "", copy: "" },
+        { n: "02", title: "", copy: "" },
+        { n: "03", title: "", copy: "" },
+        { n: "04", title: "", copy: "" },
+      ],
+    },
+    momentBand: { caption: "", image: "" },
+    profile: {
+      sectionLabel: "",
+      title: "",
+      paragraphs: [],
+      image: "",
+      imageCaption: "",
+      stats: [],
+      linkLabel: "",
+    },
+    experience: { sectionLabel: "", title: "", items: [] },
+    testimonial: { text: "", name: "", meta: "" },
+    filmstrip: { note: "", images: ["", "", "", "", "", "", ""] },
+    closing: { tagline: "", image: "" },
+    contact: { email: "", location: "", region: "", socialLinks: [] },
+  };
+}
+
+const enDefault = blankSection();
+enDefault.header.navLinks = [
+  { id: "work", label: "Work" },
+  { id: "about", label: "About" },
+  { id: "services", label: "Services" },
+];
+enDefault.header.inquireLabel = "Inquire";
+enDefault.hero.scrollLabel = "Scroll";
+enDefault.hero.workCtaLabel = "View the work";
+enDefault.hero.cvLabel = "Download CV";
+enDefault.work.driveLabel = "View full portfolio";
+
+const arDefault = blankSection();
+arDefault.header.navLinks = [
+  { id: "work", label: "أعمالي" },
+  { id: "about", label: "عني" },
+  { id: "services", label: "خدماتي" },
+];
+arDefault.header.inquireLabel = "تواصل";
+arDefault.hero.scrollLabel = "مرر لتحت";
+arDefault.hero.workCtaLabel = "شاهد الأعمال";
+arDefault.hero.cvLabel = "تحميل السيرة الذاتية";
+arDefault.work.driveLabel = "شاهد كل الأعمال";
+
+export const defaultContent = { en: enDefault, ar: arDefault };

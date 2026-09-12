@@ -10,9 +10,58 @@ import { PillButton, TextLink } from "./Button";
 import { Caption } from "./Typography";
 import { Rule } from "./Layout";
 import { useContent } from "../context/ContentContext";
+import { useLanguage } from "../context/LanguageContext";
 
 function scrollToSection(id) {
   document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+/**
+ * LanguageToggle — small EN/AR switch. Flips the public site's language
+ * (and, via the theme in index.jsx, its text direction) — persisted so a
+ * returning visitor gets the same language next time.
+ */
+function LanguageToggle({ color }) {
+  const { language, setLanguage } = useLanguage();
+  return (
+    <Stack direction="row" spacing={1} sx={{ fontSize: 12, letterSpacing: "0.5px" }}>
+      <Box
+        component="button"
+        onClick={() => setLanguage("en")}
+        sx={{
+          background: "none",
+          border: "none",
+          p: 0,
+          cursor: "pointer",
+          color,
+          opacity: language === "en" ? 1 : 0.5,
+          textDecoration: language === "en" ? "underline" : "none",
+          fontFamily: "inherit",
+        }}
+      >
+        EN
+      </Box>
+      <Box component="span" sx={{ color, opacity: 0.4 }}>
+        /
+      </Box>
+      <Box
+        component="button"
+        onClick={() => setLanguage("ar")}
+        sx={{
+          background: "none",
+          border: "none",
+          p: 0,
+          cursor: "pointer",
+          color,
+          opacity: language === "ar" ? 1 : 0.5,
+          textDecoration: language === "ar" ? "underline" : "none",
+          fontFamily: "inherit",
+        }}
+      >
+        عربي
+      </Box>
+    </Stack>
+  );
 }
 
 /**
@@ -28,6 +77,7 @@ function scrollToSection(id) {
  */
 export function Navbar({ onInquire, color = tokens.color.onDark }) {
   const { content } = useContent();
+  const { direction } = useLanguage();
   const { navLinks, inquireLabel } = content.header;
 
   return (
@@ -73,12 +123,17 @@ export function Navbar({ onInquire, color = tokens.color.onDark }) {
               </TextLink>
             ))}
           </Stack>
-          <PillButton
-            onClick={onInquire ?? (() => scrollToSection("inquire"))}
-            sx={{ borderColor: color, color, textTransform: "uppercase" }}
-          >
-            {inquireLabel} ↗
-          </PillButton>
+          <Stack direction="row" spacing={3} alignItems="center">
+            <Box sx={{ display: { xs: "none", sm: "block" } }}>
+              <LanguageToggle color={color} />
+            </Box>
+            <PillButton
+              onClick={onInquire ?? (() => scrollToSection("inquire"))}
+              sx={{ borderColor: color, color, textTransform: "uppercase" }}
+            >
+              {inquireLabel} {direction === "rtl" ? "↖" : "↗"}
+            </PillButton>
+          </Stack>
         </Stack>
       </Container>
     </Box>
@@ -247,6 +302,10 @@ export function Footer({
             >
               Admin
             </Link>
+
+            <Box sx={{ display: { xs: "block", sm: "none" } }}>
+              <LanguageToggle color={tokens.color.muted} />
+            </Box>
 
             <Link
               href="#top"

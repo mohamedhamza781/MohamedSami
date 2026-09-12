@@ -1,6 +1,7 @@
 import * as React from "react";
 import { defaultContent } from "../content";
 import { supabase, CONTENT_ROW_ID } from "../lib/supabaseClient";
+import { useLanguage } from "./LanguageContext";
 
 const ContentContext = React.createContext(null);
 
@@ -8,11 +9,11 @@ function isPlainObject(v) {
   return v && typeof v === "object" && !Array.isArray(v);
 }
 
-// Deep-merges a stored/partial content object onto the defaults so newly
-// added fields (added in a later version of the app) are never missing
-// just because an older saved row in the database predates them. Arrays
-// and primitives from `stored` fully replace the default value; plain
-// objects are merged key by key, recursively.
+// Deep-merges a stored/partial object onto defaults so newly added fields
+// (added in a later version of the app) are never missing just because an
+// older saved row in the database predates them. Arrays and primitives
+// from `stored` fully replace the default value; plain objects merge key
+// by key, recursively.
 function mergeContent(defaults, stored) {
   if (!isPlainObject(stored)) return defaults;
   const result = { ...defaults };
@@ -29,19 +30,38 @@ function mergeContent(defaults, stored) {
   return result;
 }
 
+// The content shape gained an { en, ar } split after shipping with a flat
+// (single-language) shape. If a row saved under the old shape is loaded
+// (no `en`/`ar` keys at all, but other real keys present), treat it as
+// legacy English content and carry it forward into the `en` slot rather
+// than silently discarding it.
+function normalizeStored(stored) {
+  if (!isPlainObject(stored)) return defaultContent;
+  if ("en" in stored || "ar" in stored) {
+    return {
+      en: mergeContent(defaultContent.en, stored.en),
+      ar: mergeContent(defaultContent.ar, stored.ar),
+    };
+  }
+  if (Object.keys(stored).length > 0) {
+    return {
+      en: mergeContent(defaultContent.en, stored),
+      ar: defaultContent.ar,
+    };
+  }
+  return defaultContent;
+}
+
 export function ContentProvider({ children }) {
-  const [content, setContent] = React.useState(defaultContent);
+  const [tree, setTree] = React.useState(defaultContent); // { en: {...}, ar: {...} }
   const [loading, setLoading] = React.useState(true);
   const [storageError, setStorageError] = React.useState("");
 
-  // Always-current copy of `content`, so updateContent can merge against the
-  // latest value without needing `content` in its own dependency array.
-  const contentRef = React.useRef(content);
+  const treeRef = React.useRef(tree);
   React.useEffect(() => {
-    contentRef.current = content;
-  }, [content]);
+    treeRef.current = tree;
+  }, [tree]);
 
-  // Load the live row from Supabase once on mount.
   React.useEffect(() => {
     let cancelled = false;
     (async () => {
@@ -55,7 +75,7 @@ export function ContentProvider({ children }) {
       if (error) {
         setStorageError("تعذّر تحميل محتوى الموقع من قاعدة البيانات — يتم عرض المحتوى الافتراضي مؤقتًا.");
       } else {
-        setContent(mergeContent(defaultContent, data?.data));
+        setTree(normalizeStored(data?.data));
       }
       setLoading(false);
     })();
@@ -64,10 +84,10 @@ export function ContentProvider({ children }) {
     };
   }, []);
 
-  const persist = React.useCallback(async (next) => {
+  const persist = React.useCallback(async (nextTree) => {
     const { error } = await supabase
       .from("site_content")
-      .update({ data: next, updated_at: new Date().toISOString() })
+      .update({ data: nextTree, updated_at: new Date().toISOString() })
       .eq("id", CONTENT_ROW_ID);
 
     if (error) {
@@ -82,31 +102,47 @@ export function ContentProvider({ children }) {
     return true;
   }, []);
 
-  const updateContent = React.useCallback(
-    async (patch) => {
-      const next = mergeContent(contentRef.current, patch);
-      setContent(next);
-      contentRef.current = next;
-      await persist(next);
-    },
-    [persist]
-  );
+  function makeApiForLang(lang) {
+    const updateContent = async (patch) => {
+      const nextLangSlice = mergeContent(treeRef.current[lang], patch);
+      const nextTree = { ...treeRef.current, [lang]: nextLangSlice };
+      setTree(nextTree);
+      treeRef.current = nextTree;
+      await persist(nextTree);
+    };
 
-  const resetContent = React.useCallback(async () => {
-    setContent(defaultContent);
-    await persist(defaultContent);
-  }, [persist]);
+    const resetContent = async () => {
+      const nextTree = { ...treeRef.current, [lang]: defaultContent[lang] };
+      setTree(nextTree);
+      treeRef.current = nextTree;
+      await persist(nextTree);
+    };
+
+    return { content: tree[lang], updateContent, resetContent, storageError, loading };
+  }
 
   const value = React.useMemo(
-    () => ({ content, updateContent, resetContent, storageError, loading }),
-    [content, updateContent, resetContent, storageError, loading]
+    () => ({ tree, makeApiForLang: (lang) => makeApiForLang(lang), storageError, loading }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [tree, storageError, loading]
   );
 
   return <ContentContext.Provider value={value}>{children}</ContentContext.Provider>;
 }
 
-export function useContent() {
+/**
+ * useContent(langOverride?) — reads/writes one language's slice of the
+ * bilingual content tree. Without an argument, it follows the site's
+ * active public language (from LanguageContext) — this is what every
+ * public-facing component uses, so switching the language toggle just
+ * works everywhere with no other code changes. Pass an explicit "en"/"ar"
+ * to read or edit a specific language regardless of the public toggle —
+ * this is what the Admin Dashboard's own EN/AR editing switch uses.
+ */
+export function useContent(langOverride) {
   const ctx = React.useContext(ContentContext);
   if (!ctx) throw new Error("useContent must be used inside a ContentProvider");
-  return ctx;
+  const { language: activeLanguage } = useLanguage();
+  const lang = langOverride ?? activeLanguage;
+  return ctx.makeApiForLang(lang);
 }

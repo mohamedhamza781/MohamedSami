@@ -7,6 +7,7 @@ import { Eyebrow, Display, Body, Caption } from "./Typography";
 import { Section, Rule } from "./Layout";
 import { ImagePlaceholder } from "./ImagePlaceholder";
 import { tokens } from "../theme";
+import { useLanguage } from "../context/LanguageContext";
 
 /**
  * ServiceList — numbered rows (n / title / description). Pass `items` as
@@ -14,6 +15,8 @@ import { tokens } from "../theme";
  * from the right, just before the arrow, and the arrow kicks outward.
  */
 export function ServiceList({ index = "03 / Services", title, items = [] }) {
+  const { direction } = useLanguage();
+  const arrow = direction === "rtl" ? "↖" : "↗";
   return (
     <Section>
       <Eyebrow>{index}</Eyebrow>
@@ -83,7 +86,7 @@ export function ServiceList({ index = "03 / Services", title, items = [] }) {
                   transition: "transform 0.35s cubic-bezier(0.16,1,0.3,1), color 0.35s ease",
                 }}
               >
-                ↗
+                {arrow}
               </Box>
             </Stack>
             {i < items.length - 1 && <Rule />}

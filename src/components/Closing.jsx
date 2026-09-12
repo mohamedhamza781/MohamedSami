@@ -9,6 +9,7 @@ import { Eyebrow, Display, Body, Caption } from "./Typography";
 import { TextLink, PillButton } from "./Button";
 import { ImagePlaceholder } from "./ImagePlaceholder";
 import { Section } from "./Layout";
+import { useLanguage } from "../context/LanguageContext";
 
 /**
  * MomentBand — full-bleed dark image band with a single caption line. The
@@ -83,6 +84,8 @@ export function StudioAbout({
   linkLabel = "MORE ABOUT VARELLE",
   href = "#about",
 }) {
+  const { direction } = useLanguage();
+  const arrow = direction === "rtl" ? "←" : "→";
   return (
     <Section spacing="band">
       <Eyebrow>{index}</Eyebrow>
@@ -139,7 +142,7 @@ export function StudioAbout({
           >
             {linkLabel}
             <Box component="span" className="studio-arrow" sx={{ fontSize: 15, lineHeight: 1 }}>
-              →
+              {arrow}
             </Box>
           </Link>
         </Grid>
@@ -223,6 +226,8 @@ export function ClosingCTA({
     { label: "Enquiries for", value: "2026 & 2027" },
   ],
 }) {
+  const { direction } = useLanguage();
+  const arrow = direction === "rtl" ? "←" : "→";
   return (
     <Box sx={{ position: "relative", py: { xs: 10, md: 16 } }}>
       <Box sx={{ position: "absolute", inset: 0 }}>
@@ -274,7 +279,7 @@ export function ClosingCTA({
           >
             {ctaLabel}
             <Box component="span" className="cta-arrow" sx={{ fontSize: 14, lineHeight: 1 }}>
-              →
+              {arrow}
             </Box>
           </Link>
 

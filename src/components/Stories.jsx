@@ -9,6 +9,7 @@ import { ImagePlaceholder } from "./ImagePlaceholder";
 import { Section } from "./Layout";
 import { Reveal } from "./Reveal";
 import { tokens } from "../theme";
+import { useLanguage } from "../context/LanguageContext";
 
 /**
  * Intro — large statement + supporting paragraph + "about" link, used right
@@ -24,6 +25,8 @@ export function Intro({
   linkLabel = "ABOUT VARELLE",
   href = "#about",
 }) {
+  const { direction } = useLanguage();
+  const arrow = direction === "rtl" ? "←" : "→";
   return (
     <Section id="discover" sx={{ scrollMarginTop: "110px" }}>
       <Reveal>
@@ -65,7 +68,7 @@ export function Intro({
               >
                 {linkLabel}
                 <Box component="span" className="intro-arrow" sx={{ fontSize: 15, lineHeight: 1 }}>
-                  →
+                  {arrow}
                 </Box>
               </Link>
             </Box>

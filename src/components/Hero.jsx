@@ -6,6 +6,7 @@ import { tokens } from "../theme";
 import { Eyebrow, Body } from "./Typography";
 import { TextLink } from "./Button";
 import { ImagePlaceholder } from "./ImagePlaceholder";
+import { useLanguage } from "../context/LanguageContext";
 
 /**
  * Hero — full-bleed opening band: brand mark, tagline, and primary CTAs
@@ -26,6 +27,8 @@ export function Hero({
   image,
   video,
 }) {
+  const { direction } = useLanguage();
+  const arrow = direction === "rtl" ? "←" : "→";
   const navLinkSx = {
     fontSize: 13,
     fontWeight: 600,
@@ -111,7 +114,7 @@ export function Hero({
             <Stack direction="row" spacing={4} alignItems="center">
               <Body sx={{ maxWidth: 220, fontSize: 14, color: tokens.color.onDark }}>{tagline}</Body>
               <TextLink href="#work" sx={{ color: tokens.color.onDark, ...navLinkSx }}>
-                {workCtaLabel} →
+                {workCtaLabel} {arrow}
               </TextLink>
               <TextLink href="#inquire" sx={{ color: tokens.color.onDark, ...navLinkSx }}>
                 {inquireLabel}

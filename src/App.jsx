@@ -1,10 +1,13 @@
 import * as React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Box from "@mui/material/Box";
+import { ThemeProvider } from "@mui/material/styles";
+import { CacheProvider } from "@emotion/react";
 import { ContentProvider } from "./context/ContentContext";
 import { AuthProvider } from "./context/AuthContext";
 import { ProtectedRoute } from "./components/ProtectedRoute";
-import { tokens } from "./theme";
+import { tokens, createAppTheme } from "./theme";
+import { cacheLtr } from "./emotionCache";
 import Home from "./pages/Home";
 
 // ---------------------------------------------------------------------------
@@ -23,6 +26,30 @@ import Home from "./pages/Home";
 
 const Login = React.lazy(() => import("./pages/Login"));
 const AdminDashboard = React.lazy(() => import("./pages/AdminDashboard"));
+
+// The public site's language toggle can switch the whole app's theme to
+// RTL — but /login and /admin are an internal tool with English-only
+// labels, so forcing them to always render LTR (regardless of whatever
+// the public toggle is currently set to) avoids an English interface
+// sitting in a mirrored, RTL-flowing layout. The bilingual *content* being
+// edited is unaffected — this only pins the dashboard's own layout.
+//
+// Both the theme's `direction` AND the emotion cache need to be
+// overridden here — the cache is what actually flips physical CSS
+// properties (margin-left/padding-right/etc.) via the RTL stylis plugin,
+// so overriding only the theme while leaving the outer RTL cache active
+// would still mirror the dashboard's CSS even with dir="ltr" on the page.
+const forcedLtrTheme = createAppTheme("ltr");
+
+function ForceLtr({ children }) {
+  return (
+    <CacheProvider value={cacheLtr}>
+      <ThemeProvider theme={forcedLtrTheme}>
+        <Box dir="ltr">{children}</Box>
+      </ThemeProvider>
+    </CacheProvider>
+  );
+}
 
 function RouteFallback() {
   return (
@@ -52,13 +79,22 @@ export default function App() {
           <React.Suspense fallback={<RouteFallback />}>
             <Routes>
               <Route path="/" element={<Home />} />
-              <Route path="/login" element={<Login />} />
+              <Route
+                path="/login"
+                element={
+                  <ForceLtr>
+                    <Login />
+                  </ForceLtr>
+                }
+              />
               <Route
                 path="/admin"
                 element={
-                  <ProtectedRoute>
-                    <AdminDashboard />
-                  </ProtectedRoute>
+                  <ForceLtr>
+                    <ProtectedRoute>
+                      <AdminDashboard />
+                    </ProtectedRoute>
+                  </ForceLtr>
                 }
               />
               <Route path="*" element={<Home />} />

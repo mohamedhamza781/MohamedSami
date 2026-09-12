@@ -55,6 +55,28 @@ export function AuthProvider({ children }) {
     return !error;
   }, []);
 
+  const changeEmail = React.useCallback(async (currentPassword, newEmail) => {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user?.email) return { success: false, error: "لا يوجد مستخدم مسجّل دخول." };
+
+    const { error: reauthError } = await supabase.auth.signInWithPassword({
+      email: user.email,
+      password: currentPassword,
+    });
+    if (reauthError) return { success: false, error: "كلمة المرور الحالية غير صحيحة." };
+
+    const { error } = await supabase.auth.updateUser({ email: newEmail });
+    if (error) return { success: false, error: error.message };
+
+    // Depending on your Supabase Auth settings ("Confirm email change"),
+    // the email may not switch over until a confirmation link sent to the
+    // new address is clicked. Surface that so the dashboard can tell the
+    // person what to expect instead of assuming it's instant.
+    return { success: true, error: null };
+  }, []);
+
   const value = React.useMemo(
     () => ({
       isAuthenticated: !!session,
@@ -63,8 +85,9 @@ export function AuthProvider({ children }) {
       login,
       logout,
       changePassword,
+      changeEmail,
     }),
-    [session, authLoading, login, logout, changePassword]
+    [session, authLoading, login, logout, changePassword, changeEmail]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

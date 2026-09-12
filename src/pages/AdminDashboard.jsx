@@ -79,7 +79,7 @@ function SaveButton({ onClick, children = "Save" }) {
 
 export default function AdminDashboard() {
   const { content, updateContent, resetContent, storageError, loading } = useContent();
-  const { logout, changePassword, userEmail } = useAuth();
+  const { logout, changePassword, changeEmail, userEmail } = useAuth();
   const [toast, setToast] = React.useState("");
 
   React.useEffect(() => {
@@ -279,6 +279,26 @@ export default function AdminDashboard() {
       announce("Password updated");
     } else {
       setPwError("كلمة المرور الحالية غير صحيحة.");
+    }
+  }
+
+  // ---- Email ----
+  const [emailCurrentPassword, setEmailCurrentPassword] = React.useState("");
+  const [newEmail, setNewEmail] = React.useState("");
+  const [emailError, setEmailError] = React.useState("");
+  async function saveEmail() {
+    setEmailError("");
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(newEmail)) {
+      setEmailError("حط إيميل صحيح.");
+      return;
+    }
+    const result = await changeEmail(emailCurrentPassword, newEmail);
+    if (result.success) {
+      setEmailCurrentPassword("");
+      setNewEmail("");
+      announce("تم إرسال رابط تأكيد للإيميل الجديد — لازم تفتحه لتفعيل الإيميل الجديد فعليًا.");
+    } else {
+      setEmailError(result.error || "تعذّر تغيير الإيميل.");
     }
   }
 
@@ -533,8 +553,19 @@ export default function AdminDashboard() {
 
         <Rule />
 
-        <DashboardSection title="Account" subtitle="Change the admin password">
+        <DashboardSection title="Account" subtitle="Change the admin email or password">
           <Stack spacing={3} sx={{ maxWidth: 360 }}>
+            {userEmail && <Caption>Signed in as {userEmail}</Caption>}
+
+            <Body sx={{ fontSize: 13, fontWeight: 600 }}>Change email</Body>
+            <TextField label="New email" type="email" value={newEmail} onChange={(e) => setNewEmail(e.target.value)} fullWidth variant="standard" sx={fieldSx} />
+            <TextField label="Current password" type="password" value={emailCurrentPassword} onChange={(e) => setEmailCurrentPassword(e.target.value)} fullWidth variant="standard" sx={fieldSx} />
+            {emailError && <Body sx={{ color: "#B3261E", fontSize: 13 }}>{emailError}</Body>}
+            <SaveButton onClick={saveEmail}>Update email</SaveButton>
+
+            <Rule sx={{ my: 1 }} />
+
+            <Body sx={{ fontSize: 13, fontWeight: 600 }}>Change password</Body>
             <TextField label="Current password" type="password" value={currentPassword} onChange={(e) => setCurrentPassword(e.target.value)} fullWidth variant="standard" sx={fieldSx} />
             <TextField label="New password" type="password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} fullWidth variant="standard" sx={fieldSx} />
             {pwError && <Body sx={{ color: "#B3261E", fontSize: 13 }}>{pwError}</Body>}

@@ -152,6 +152,7 @@ export function Footer({
   developerUrl = "https://portifolio-ylii.onrender.com/",
 }) {
   const { content } = useContent();
+  const { direction } = useLanguage();
   const { contact, brand, header } = content;
 
   const columns = [
@@ -257,7 +258,15 @@ export function Footer({
           justifyContent="space-between"
           alignItems={{ xs: "flex-start", sm: "center" }}
         >
-          <Box sx={{ fontSize: 11, letterSpacing: "0.6px", color: tokens.color.muted }}>
+          <Box
+            dir="ltr"
+            sx={{
+              fontSize: 11,
+              letterSpacing: "0.6px",
+              color: tokens.color.muted,
+              textAlign: direction === "rtl" ? "right" : "left",
+            }}
+          >
             © {new Date().getFullYear()} {brand.name}
             {developer && (
               <>
@@ -300,7 +309,7 @@ export function Footer({
                 "&:hover": { color: tokens.color.primary },
               }}
             >
-              Admin
+              {direction === "rtl" ? "الإدارة" : "Admin"}
             </Link>
 
             <Box sx={{ display: { xs: "block", sm: "none" } }}>
@@ -326,7 +335,7 @@ export function Footer({
                 "&:hover": { color: tokens.color.primary },
               }}
             >
-              Top ↑
+              {direction === "rtl" ? "↑ الأعلى" : "Top ↑"}
             </Link>
           </Stack>
         </Stack>

@@ -334,6 +334,13 @@ function DashboardForm({ lang, onChangeLang }) {
 
   // ---- Closing + Contact ----
   const [closingTagline, setClosingTagline] = React.useState(content.closing.tagline);
+  const [closingHeadline, setClosingHeadline] = React.useState(content.closing.headline);
+  const [closingCtaLabel, setClosingCtaLabel] = React.useState(content.closing.ctaLabel);
+  const [closingEmailLabel, setClosingEmailLabel] = React.useState(content.closing.emailLabel);
+  const [closingResponseLabel, setClosingResponseLabel] = React.useState(content.closing.responseLabel);
+  const [closingResponseValue, setClosingResponseValue] = React.useState(content.closing.responseValue);
+  const [closingEnquiriesLabel, setClosingEnquiriesLabel] = React.useState(content.closing.enquiriesLabel);
+  const [closingEnquiriesValue, setClosingEnquiriesValue] = React.useState(content.closing.enquiriesValue);
   const [closingImage, setClosingImage] = React.useState(content.closing.image);
   const [email, setEmail] = React.useState(content.contact.email);
   const [locationValue, setLocationValue] = React.useState(content.contact.location);
@@ -353,7 +360,17 @@ function DashboardForm({ lang, onChangeLang }) {
   }
   async function saveContact() {
     await updateContent({
-      closing: { tagline: closingTagline, image: closingImage },
+      closing: {
+        tagline: closingTagline,
+        headline: closingHeadline,
+        ctaLabel: closingCtaLabel,
+        emailLabel: closingEmailLabel,
+        responseLabel: closingResponseLabel,
+        responseValue: closingResponseValue,
+        enquiriesLabel: closingEnquiriesLabel,
+        enquiriesValue: closingEnquiriesValue,
+        image: closingImage,
+      },
       contact: { email, location: locationValue, region, menuLabel, socialLabel, contactLabel, socialLinks },
     });
     announce("Contact & closing saved");
@@ -781,7 +798,29 @@ function DashboardForm({ lang, onChangeLang }) {
             <Rule sx={{ my: 1 }} />
 
             <TextField label="Closing tagline" value={closingTagline} onChange={(e) => setClosingTagline(e.target.value)} fullWidth variant="standard" sx={fieldSx} />
+            <TextField
+              label="Closing headline (leave a line break where you want the text to wrap)"
+              value={closingHeadline}
+              onChange={(e) => setClosingHeadline(e.target.value)}
+              fullWidth
+              multiline
+              minRows={2}
+              variant="standard"
+              sx={fieldSx}
+            />
+            <TextField label="CTA button label" value={closingCtaLabel} onChange={(e) => setClosingCtaLabel(e.target.value)} fullWidth variant="standard" sx={fieldSx} />
             <MediaUploadField label="Closing background photo" kind="image" aspect="16 / 9" value={closingImage} onChange={setClosingImage} />
+            <Rule sx={{ my: 1 }} />
+            <Caption sx={{ display: "block" }}>Meta row under the CTA</Caption>
+            <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
+              <TextField label="Email label" value={closingEmailLabel} onChange={(e) => setClosingEmailLabel(e.target.value)} fullWidth variant="standard" sx={fieldSx} />
+              <TextField label="Response label" value={closingResponseLabel} onChange={(e) => setClosingResponseLabel(e.target.value)} fullWidth variant="standard" sx={fieldSx} />
+              <TextField label="Response value" value={closingResponseValue} onChange={(e) => setClosingResponseValue(e.target.value)} fullWidth variant="standard" sx={fieldSx} />
+            </Stack>
+            <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
+              <TextField label="Enquiries label" value={closingEnquiriesLabel} onChange={(e) => setClosingEnquiriesLabel(e.target.value)} fullWidth variant="standard" sx={fieldSx} />
+              <TextField label="Enquiries value" value={closingEnquiriesValue} onChange={(e) => setClosingEnquiriesValue(e.target.value)} fullWidth variant="standard" sx={fieldSx} />
+            </Stack>
             <TextField label="Email" value={email} onChange={(e) => setEmail(e.target.value)} fullWidth variant="standard" sx={fieldSx} />
             <TextField label="Location" value={locationValue} onChange={(e) => setLocationValue(e.target.value)} fullWidth variant="standard" sx={fieldSx} />
             <TextField label="Region" value={region} onChange={(e) => setRegion(e.target.value)} fullWidth variant="standard" sx={fieldSx} />

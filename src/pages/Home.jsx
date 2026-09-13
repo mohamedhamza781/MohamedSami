@@ -143,16 +143,20 @@ export default function Home() {
       <Box id="inquire" sx={{ scrollMarginTop: "110px" }}>
         <ClosingCTA
           tagline={closing.tagline}
+          ctaLabel={closing.ctaLabel}
           image={closing.image || undefined}
           meta={[
-            { label: "Email", value: contact.email },
-            { label: "Response", value: "Within two working days" },
-            { label: "Enquiries for", value: "2026 & 2027" },
+            { label: closing.emailLabel, value: contact.email },
+            { label: closing.responseLabel, value: closing.responseValue },
+            { label: closing.enquiriesLabel, value: closing.enquiriesValue },
           ]}
         >
-          Your story,
-          <br />
-          documented differently.
+          {closing.headline.split("\n").map((line, i, arr) => (
+            <React.Fragment key={i}>
+              {line}
+              {i < arr.length - 1 && <br />}
+            </React.Fragment>
+          ))}
         </ClosingCTA>
       </Box>
 

@@ -87,7 +87,17 @@ function blankSection() {
     experience: { sectionLabel: "", title: "", items: [] },
     testimonial: { text: "", name: "", meta: "" },
     filmstrip: { sectionLabel: "", note: "", images: ["", "", "", "", "", "", ""] },
-    closing: { tagline: "", image: "" },
+    closing: {
+      tagline: "",
+      headline: "",
+      ctaLabel: "",
+      emailLabel: "",
+      responseLabel: "",
+      responseValue: "",
+      enquiriesLabel: "",
+      enquiriesValue: "",
+      image: "",
+    },
     contact: {
       email: "",
       location: "",
@@ -119,6 +129,13 @@ enDefault.filmstrip.sectionLabel = "From the archive";
 enDefault.contact.menuLabel = "Menu";
 enDefault.contact.socialLabel = "Social";
 enDefault.contact.contactLabel = "Contact";
+enDefault.closing.headline = "Your story,\ndocumented differently.";
+enDefault.closing.ctaLabel = "Start a conversation";
+enDefault.closing.emailLabel = "Email";
+enDefault.closing.responseLabel = "Response";
+enDefault.closing.responseValue = "Within two working days";
+enDefault.closing.enquiriesLabel = "Enquiries for";
+enDefault.closing.enquiriesValue = "2026 & 2027";
 
 const arDefault = blankSection();
 arDefault.header.navLinks = [
@@ -139,5 +156,12 @@ arDefault.filmstrip.sectionLabel = "من الأرشيف";
 arDefault.contact.menuLabel = "القائمة";
 arDefault.contact.socialLabel = "تواصل اجتماعي";
 arDefault.contact.contactLabel = "تواصل معي";
+arDefault.closing.headline = "قصتك،\nموثّقة بطريقة مختلفة.";
+arDefault.closing.ctaLabel = "ابدأ محادثة";
+arDefault.closing.emailLabel = "البريد الإلكتروني";
+arDefault.closing.responseLabel = "الرد خلال";
+arDefault.closing.responseValue = "يومي عمل";
+arDefault.closing.enquiriesLabel = "الحجوزات مفتوحة لـ";
+arDefault.closing.enquiriesValue = "2026 و 2027";
 
 export const defaultContent = { en: enDefault, ar: arDefault };

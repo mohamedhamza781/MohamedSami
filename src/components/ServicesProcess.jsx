@@ -26,7 +26,7 @@ export function ServiceList({ index = "03 / Services", title, items = [] }) {
 
       <Stack sx={{ mt: 6 }}>
         {items.map((s, i) => (
-          <Fragment key={s.n}>
+          <Fragment key={i}>
             <Stack
               direction={{ xs: "column", md: "row" }}
               spacing={{ xs: 1, md: 4 }}
@@ -109,8 +109,8 @@ export function ProcessSteps({ index = "04 / Process", title, items = [] }) {
         {title}
       </Display>
       <Grid container spacing={4} sx={{ mt: 4 }}>
-        {items.map((s) => (
-          <Grid item xs={12} sm={6} md={3} key={s.n}>
+        {items.map((s, i) => (
+          <Grid item xs={12} sm={6} md={3} key={i}>
             <Caption>{s.n}</Caption>
             <Body sx={{ fontSize: 20, mt: 1, color: "inherit" }}>{s.title}</Body>
             <Body sx={{ fontSize: 14, mt: 1 }}>{s.copy}</Body>

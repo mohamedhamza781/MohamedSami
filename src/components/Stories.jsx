@@ -145,7 +145,7 @@ export function StoryGrid({
 
       <Grid container spacing={{ xs: 3, md: 4 }} sx={{ mt: 1 }}>
         {items.map((s, i) => (
-          <Grid item xs={12} sm={6} key={s.title}>
+          <Grid item xs={12} sm={6} key={i}>
             <Reveal delay={0.08 * (i % 2)}>
               <StoryCard {...s} />
             </Reveal>

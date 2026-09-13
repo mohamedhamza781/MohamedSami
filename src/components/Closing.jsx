@@ -110,8 +110,8 @@ export function StudioAbout({
 
           <Box sx={{ borderTop: "1px solid rgba(25,25,23,0.12)", mt: 5, pt: 4 }}>
             <Grid container rowSpacing={3} columnSpacing={4}>
-              {stats.map((s) => (
-                <Grid item xs={6} sm={4} key={s.label}>
+              {stats.map((s, i) => (
+                <Grid item xs={6} sm={4} key={i}>
                   <Caption>{s.label}</Caption>
                   <Box sx={{ mt: 0.5 }}>{s.value}</Box>
                 </Grid>
@@ -285,8 +285,8 @@ export function ClosingCTA({
 
           <Box sx={{ borderTop: `1px solid ${tokens.color.onDark}33`, pt: 3 }}>
             <Grid container spacing={4}>
-              {meta.map((m) => (
-                <Grid item xs={12} sm={4} key={m.label}>
+              {meta.map((m, i) => (
+                <Grid item xs={12} sm={4} key={i}>
                   <Caption sx={{ color: `${tokens.color.onDark}99` }}>{m.label}</Caption>
                   <Box sx={{ mt: 0.5, fontSize: 13, fontWeight: 600, color: tokens.color.onDark }}>
                     {m.value}

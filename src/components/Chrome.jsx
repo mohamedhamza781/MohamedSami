@@ -211,15 +211,15 @@ export function Footer({
           </Grid>
           {columns
             .filter((col) => col.items.length > 0)
-            .map((col) => (
-            <Grid item xs={6} md={2} key={col.title}>
+            .map((col, colIndex) => (
+            <Grid item xs={6} md={2} key={colIndex}>
               <Caption sx={{ display: "block", mb: 1.5, color: tokens.color.muted }}>
                 {col.title}
               </Caption>
-              {col.items.map((item) =>
+              {col.items.map((item, itemIndex) =>
                 item.href ? (
                   <Link
-                    key={item.label}
+                    key={itemIndex}
                     href={item.href}
                     onClick={item.onClick}
                     target={item.external ? "_blank" : undefined}
@@ -239,7 +239,7 @@ export function Footer({
                   </Link>
                 ) : (
                   <Box
-                    key={item.label}
+                    key={itemIndex}
                     sx={{ fontSize: 13, fontWeight: 600, letterSpacing: "0.3px", py: 0.5, color: tokens.color.primary }}
                   >
                     {item.label}

@@ -4,7 +4,7 @@ import Container from "@mui/material/Container";
 import Stack from "@mui/material/Stack";
 import Grid from "@mui/material/Grid";
 import Link from "@mui/material/Link";
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink, useLocation, useNavigate } from "react-router-dom";
 import { tokens } from "../theme";
 import { PillButton, TextLink } from "./Button";
 import { Caption } from "./Typography";
@@ -79,6 +79,17 @@ export function Navbar({ onInquire, color = tokens.color.onDark }) {
   const { content } = useContent();
   const { direction } = useLanguage();
   const { navLinks, inquireLabel } = content.header;
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  function handleBrandClick(e) {
+    e.preventDefault();
+    if (location.pathname === "/") {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } else {
+      navigate("/");
+    }
+  }
 
   return (
     <Box
@@ -100,14 +111,14 @@ export function Navbar({ onInquire, color = tokens.color.onDark }) {
     >
       <Container maxWidth="xxl" sx={{ width: "100%" }}>
         <Stack direction="row" alignItems="center" justifyContent="space-between">
-          <Link
+          <TextLink
             component={RouterLink}
             to="/"
-            underline="none"
+            onClick={handleBrandClick}
             sx={{ fontSize: 13, letterSpacing: "2px", color }}
           >
             {content.brand.name}
-          </Link>
+          </TextLink>
           <Stack direction="row" spacing={4} sx={{ display: { xs: "none", md: "flex" } }}>
             {navLinks.map((l) => (
               <TextLink
